@@ -433,8 +433,28 @@ export class BlockchainService {
     };
   }
 
-  isConnected(): boolean {
-    return !!this.signer && !!this.contract;
+  async isConnected(): Promise<boolean> {
+    try {
+      if (!this.signer || !this.contract) {
+        return false;
+      }
+      
+      // Verify we can actually get the address
+      const address = await this.signer.getAddress();
+      
+      // Verify network is correct
+      if (this.provider) {
+        const network = await this.provider.getNetwork();
+        if (Number(network.chainId) !== 11155111) {
+          return false;
+        }
+      }
+      
+      return !!address;
+    } catch (error) {
+      console.error("Connection check failed:", error);
+      return false;
+    }
   }
 
   async getConnectedAddress(): Promise<string | null> {

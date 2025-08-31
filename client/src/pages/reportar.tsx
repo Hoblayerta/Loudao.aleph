@@ -136,11 +136,14 @@ export default function Reportar() {
     return (
       <div className="min-h-screen py-16 px-4">
         <div className="max-w-md mx-auto">
-          <WalletConnect onConnected={async () => {
-            console.log("Wallet connected, checking status...");
-            const connected = await blockchainService.isConnected();
-            console.log("Connection status after connect:", connected);
-            setIsConnected(connected);
+          <WalletConnect onConnected={async (address) => {
+            console.log("Wallet connected with address:", address);
+            // Wait a moment for connection to stabilize
+            setTimeout(async () => {
+              const connected = await blockchainService.isConnected();
+              console.log("Connection status after connect:", connected);
+              setIsConnected(connected);
+            }, 1000);
           }} />
         </div>
       </div>
