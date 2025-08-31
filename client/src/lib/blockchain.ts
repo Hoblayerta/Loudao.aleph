@@ -9,15 +9,15 @@ declare global {
 
 const CONTRACT_ADDRESS = import.meta.env.VITE_CONTRACT_ADDRESS || "";
 const CONTRACT_ABI = [
-  "function submitReport(string memory _aggressorName, string memory _institution, string memory _description, uint256 _incidentYear, string memory _city, bytes memory _encryptedVictimAge, bytes memory _encryptedRelationshipType, bytes memory _encryptedViolenceType, bytes memory _encryptedUrgencyLevel) public",
-  "function getReport(uint256 _reportId) public view returns (tuple(uint256 id, string aggressorName, string institution, string description, uint256 incidentYear, string city, address reporter, uint256 timestamp, bool isActive))",
-  "function getAllReports() public view returns (tuple(uint256 id, string aggressorName, string institution, string description, uint256 incidentYear, string city, address reporter, uint256 timestamp, bool isActive)[])",
-  "function getAggressorReportCount(string memory _aggressorName) public view returns (uint256)",
-  "function getTotalReports() public view returns (uint256)",
-  "function getUniqueAggressors() public view returns (uint256)",
-  "function getPatternsDetected() public view returns (uint256)",
-  "event ReportSubmitted(uint256 indexed reportId, string indexed aggressorName, string institution, address reporter, uint256 timestamp)",
-  "event PatternDetected(string indexed aggressorName, uint256 reportCount, uint256 timestamp)"
+  "function submitReport(string,string,string,uint256,bytes,bytes,bytes,bytes) external",
+  "function getAllReports() external view returns (tuple(string,string,string,uint256,uint256,uint256)[])",
+  "function getAggressorReportCount(string) external view returns (uint256)",
+  "function getTotalReports() external view returns (uint256)",
+  "function getUniqueAggressors() external view returns (uint256)",
+  "function getPatternsDetected() external view returns (uint256)",
+  "function getReport(uint256) external view returns (uint256,string,string,string,uint256,string,address,uint256,bool)",
+  "event ReportSubmitted(uint256 indexed,string,string,uint256)",
+  "event PatternMatched(string,uint256)"
 ];
 
 export class BlockchainService {
@@ -35,14 +35,14 @@ export class BlockchainService {
     // Request account access
     const accounts = await this.provider.send("eth_requestAccounts", []);
     
-    // Check if we're on Lisk Sepolia (Chain ID: 4202)
+    // Check if we're on Sepolia (Chain ID: 11155111)
     const network = await this.provider.getNetwork();
-    if (Number(network.chainId) !== 4202) {
-      // Switch to Lisk Sepolia
+    if (Number(network.chainId) !== 11155111) {
+      // Switch to Sepolia
       try {
         await window.ethereum.request({
           method: 'wallet_switchEthereumChain',
-          params: [{ chainId: '0x106A' }], // 4202 in hex
+          params: [{ chainId: '0xAA36A7' }], // 11155111 in hex
         });
       } catch (switchError: any) {
         // If network doesn't exist, add it
@@ -50,15 +50,15 @@ export class BlockchainService {
           await window.ethereum.request({
             method: 'wallet_addEthereumChain',
             params: [{
-              chainId: '0x106A',
-              chainName: 'Lisk Sepolia Testnet',
+              chainId: '0xAA36A7',
+              chainName: 'Sepolia Testnet',
               nativeCurrency: {
-                name: 'Lisk Sepolia ETH',
+                name: 'Sepolia ETH',
                 symbol: 'ETH',
                 decimals: 18
               },
-              rpcUrls: ['https://rpc.sepolia-api.lisk.com'],
-              blockExplorerUrls: ['https://sepolia-blockscout.lisk.com']
+              rpcUrls: ['https://rpc.sepolia.org'],
+              blockExplorerUrls: ['https://sepolia.etherscan.io']
             }]
           });
         } else {
@@ -95,7 +95,6 @@ export class BlockchainService {
       institution,
       description,
       incidentYear,
-      city,
       encryptedData.victimAge,
       encryptedData.relationshipType,
       encryptedData.violenceType,

@@ -4,9 +4,9 @@ pragma solidity ^0.8.24;
 // IMPORTAR SEGÚN ENTORNO
 // En desarrollo local: usa el mock
 // En producción: usa la librería FHE real
-import "./hybrid/TFHE.sol";
+import "./TFHE.sol";
 
-contract LouDaoReports {
+contract LouDaoHybrid {
     // Estructura para datos públicos
     struct PublicReport {
         string aggressor;
@@ -62,7 +62,8 @@ contract LouDaoReports {
         bytes calldata _victimAgeBytes,
         bytes calldata _relationshipTypeBytes,
         bytes calldata _violenceTypeBytes,
-        bytes calldata _urgencyLevelBytes
+        bytes calldata _urgencyLevelBytes,
+        bytes32 _reporterHash
     ) external {
         // Validaciones básicas
         require(bytes(_aggressor).length > 0, "Aggressor required");
@@ -100,7 +101,8 @@ contract LouDaoReports {
             _victimAgeBytes,
             _relationshipTypeBytes,
             _violenceTypeBytes,
-            _urgencyLevelBytes
+            _urgencyLevelBytes,
+            _reporterHash
         );
 
         // Actualizar mapping para pattern matching
@@ -144,7 +146,7 @@ contract LouDaoReports {
     }
 
     // Resto de las funciones...
-    function getAllReports() external view returns (PublicReport[] memory) {
+    function getAllPublicReports() external view returns (PublicReport[] memory) {
         return publicReports;
     }
 
@@ -174,33 +176,6 @@ contract LouDaoReports {
         uint256 patterns = 0;
         // Count aggressors with multiple reports
         return patterns;
-    }
-
-    // Backwards compatibility functions for the frontend
-    function getReport(uint256 _reportId) external view returns (
-        uint256 id,
-        string memory aggressorName,
-        string memory institution,
-        string memory description,
-        uint256 incidentYear,
-        string memory city,
-        address reporter,
-        uint256 timestamp,
-        bool isActive
-    ) {
-        require(_reportId < publicReports.length, "Invalid report ID");
-        PublicReport memory report = publicReports[_reportId];
-        return (
-            report.reportId,
-            report.aggressor,
-            report.institution,
-            report.description,
-            report.year,
-            "", // city - not used in hybrid version
-            owner, // reporter - simplified
-            report.timestamp,
-            true // isActive - always true in hybrid version
-        );
     }
 
     function transferOwnership(address newOwner) external {

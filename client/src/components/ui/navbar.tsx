@@ -58,25 +58,17 @@ export function Navbar() {
 
           {/* Navigation Links */}
           <div className="hidden md:flex items-center space-x-8">
-            <Link href="/tendedero">
-              <a className={`transition-colors ${location === '/tendedero' ? 'text-primary' : 'text-foreground hover:text-primary'}`}>
-                Clothesline
-              </a>
+            <Link href="/tendedero" className={`transition-colors ${location === '/tendedero' ? 'text-primary' : 'text-foreground hover:text-primary'}`}>
+              Clothesline
             </Link>
-            <Link href="/reportar">
-              <a className={`transition-colors ${location === '/reportar' ? 'text-primary' : 'text-foreground hover:text-primary'}`}>
-                Report
-              </a>
+            <Link href="/reportar" className={`transition-colors ${location === '/reportar' ? 'text-primary' : 'text-foreground hover:text-primary'}`}>
+              Report
             </Link>
-            <Link href="/analytics">
-              <a className={`transition-colors ${location === '/analytics' ? 'text-primary' : 'text-foreground hover:text-primary'}`}>
-                Analytics
-              </a>
+            <Link href="/analytics" className={`transition-colors ${location === '/analytics' ? 'text-primary' : 'text-foreground hover:text-primary'}`}>
+              Analytics
             </Link>
-            <Link href="/apoyo">
-              <a className={`transition-colors ${location === '/apoyo' ? 'text-primary' : 'text-foreground hover:text-primary'}`}>
-                Support
-              </a>
+            <Link href="/apoyo" className={`transition-colors ${location === '/apoyo' ? 'text-primary' : 'text-foreground hover:text-primary'}`}>
+              Support
             </Link>
           </div>
 
@@ -91,7 +83,7 @@ export function Navbar() {
                 <div className="flex items-center text-sm text-muted-foreground" data-testid="network-status">
                   <div className="w-2 h-2 bg-accent rounded-full mr-2"></div>
                   <Shield className="h-4 w-4 mr-1" />
-                  Lisk Sepolia
+                  Sepolia
                 </div>
               </div>
             ) : (
