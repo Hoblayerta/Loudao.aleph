@@ -1,0 +1,261 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: hsl(320, 15%, 97%);
+  --foreground: hsl(320, 10%, 15%);
+  --card: hsl(0, 0%, 100%);
+  --card-foreground: hsl(320, 10%, 15%);
+  --popover: hsl(0, 0%, 100%);
+  --popover-foreground: hsl(320, 10%, 15%);
+  --primary: hsl(278, 96%, 34%);
+  --primary-foreground: hsl(0, 0%, 100%);
+  --secondary: hsl(310, 95%, 38%);
+  --secondary-foreground: hsl(0, 0%, 100%);
+  --muted: hsl(320, 15%, 94%);
+  --muted-foreground: hsl(320, 10%, 45%);
+  --accent: hsl(130, 95%, 32%);
+  --accent-foreground: hsl(0, 0%, 100%);
+  --destructive: hsl(0, 84%, 60%);
+  --destructive-foreground: hsl(0, 0%, 100%);
+  --border: hsl(320, 20%, 88%);
+  --input: hsl(320, 20%, 92%);
+  --ring: hsl(278, 96%, 34%);
+  --chart-1: hsl(278, 96%, 34%);
+  --chart-2: hsl(130, 95%, 32%);
+  --chart-3: hsl(310, 95%, 38%);
+  --chart-4: hsl(147, 78%, 42%);
+  --chart-5: hsl(341, 75%, 51%);
+  --sidebar: hsl(0, 0%, 100%);
+  --sidebar-foreground: hsl(320, 10%, 15%);
+  --sidebar-primary: hsl(278, 96%, 34%);
+  --sidebar-primary-foreground: hsl(0, 0%, 100%);
+  --sidebar-accent: hsl(320, 15%, 94%);
+  --sidebar-accent-foreground: hsl(278, 96%, 34%);
+  --sidebar-border: hsl(320, 20%, 88%);
+  --sidebar-ring: hsl(278, 96%, 34%);
+  --font-sans: "Open Sans", sans-serif;
+  --font-serif: Georgia, serif;
+  --font-mono: Menlo, monospace;
+  --radius: 0.75rem;
+  --shadow-2xs: 0px 2px 0px 0px hsl(278, 96%, 34%, 0.00);
+  --shadow-xs: 0px 2px 0px 0px hsl(278, 96%, 34%, 0.00);
+  --shadow-sm: 0px 2px 0px 0px hsl(278, 96%, 34%, 0.00), 0px 1px 2px -1px hsl(278, 96%, 34%, 0.00);
+  --shadow: 0px 2px 0px 0px hsl(278, 96%, 34%, 0.00), 0px 1px 2px -1px hsl(278, 96%, 34%, 0.00);
+  --shadow-md: 0px 2px 0px 0px hsl(278, 96%, 34%, 0.00), 0px 2px 4px -1px hsl(278, 96%, 34%, 0.00);
+  --shadow-lg: 0px 2px 0px 0px hsl(278, 96%, 34%, 0.00), 0px 4px 6px -1px hsl(278, 96%, 34%, 0.00);
+  --shadow-xl: 0px 2px 0px 0px hsl(278, 96%, 34%, 0.00), 0px 8px 10px -1px hsl(278, 96%, 34%, 0.00);
+  --shadow-2xl: 0px 2px 0px 0px hsl(278, 96%, 34%, 0.00);
+  --tracking-normal: 0em;
+  --spacing: 0.25rem;
+}
+
+.dark {
+  --background: hsl(0, 0%, 0%);
+  --foreground: hsl(320, 15%, 92%);
+  --card: hsl(320, 20%, 8%);
+  --card-foreground: hsl(320, 15%, 85%);
+  --popover: hsl(0, 0%, 0%);
+  --popover-foreground: hsl(320, 15%, 92%);
+  --primary: hsl(278, 96%, 45%);
+  --primary-foreground: hsl(0, 0%, 100%);
+  --secondary: hsl(310, 95%, 48%);
+  --secondary-foreground: hsl(0, 0%, 100%);
+  --muted: hsl(320, 20%, 12%);
+  --muted-foreground: hsl(320, 10%, 55%);
+  --accent: hsl(130, 95%, 42%);
+  --accent-foreground: hsl(0, 0%, 100%);
+  --destructive: hsl(0, 84%, 60%);
+  --destructive-foreground: hsl(0, 0%, 100%);
+  --border: hsl(320, 20%, 18%);
+  --input: hsl(320, 20%, 15%);
+  --ring: hsl(278, 96%, 45%);
+  --chart-1: hsl(278, 96%, 45%);
+  --chart-2: hsl(130, 95%, 42%);
+  --chart-3: hsl(310, 95%, 48%);
+  --chart-4: hsl(147, 78%, 52%);
+  --chart-5: hsl(341, 75%, 61%);
+  --sidebar: hsl(320, 20%, 8%);
+  --sidebar-foreground: hsl(320, 15%, 85%);
+  --sidebar-primary: hsl(278, 96%, 45%);
+  --sidebar-primary-foreground: hsl(0, 0%, 100%);
+  --sidebar-accent: hsl(320, 20%, 12%);
+  --sidebar-accent-foreground: hsl(278, 96%, 45%);
+  --sidebar-border: hsl(320, 20%, 18%);
+  --sidebar-ring: hsl(278, 96%, 45%);
+  --font-sans: "Open Sans", sans-serif;
+  --font-serif: Georgia, serif;
+  --font-mono: Menlo, monospace;
+  --radius: 0.75rem;
+  --shadow-2xs: 0px 2px 0px 0px hsl(278, 96%, 45%, 0.00);
+  --shadow-xs: 0px 2px 0px 0px hsl(278, 96%, 45%, 0.00);
+  --shadow-sm: 0px 2px 0px 0px hsl(278, 96%, 45%, 0.00), 0px 1px 2px -1px hsl(278, 96%, 45%, 0.00);
+  --shadow: 0px 2px 0px 0px hsl(278, 96%, 45%, 0.00), 0px 1px 2px -1px hsl(278, 96%, 45%, 0.00);
+  --shadow-md: 0px 2px 0px 0px hsl(278, 96%, 45%, 0.00), 0px 2px 4px -1px hsl(278, 96%, 45%, 0.00);
+  --shadow-lg: 0px 2px 0px 0px hsl(278, 96%, 45%, 0.00), 0px 4px 6px -1px hsl(278, 96%, 45%, 0.00);
+  --shadow-xl: 0px 2px 0px 0px hsl(278, 96%, 45%, 0.00), 0px 8px 10px -1px hsl(278, 96%, 45%, 0.00);
+  --shadow-2xl: 0px 2px 0px 0px hsl(278, 96%, 45%, 0.00);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+  }
+}
+
+/* Custom Tendedero Styles */
+.tendedero-card {
+  transform: rotate(-1deg);
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.tendedero-card:nth-child(even) {
+  transform: rotate(1deg);
+}
+
+.tendedero-card:nth-child(3n) {
+  transform: rotate(-0.5deg);
+}
+
+.tendedero-card:hover {
+  transform: rotate(0deg) scale(1.02);
+  z-index: 10;
+}
+
+.clip-shadow {
+  box-shadow: 
+    0 -5px 10px rgba(107, 2, 167, 0.1),
+    0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.clothesline {
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    hsl(320, 20%, 60%) 2%, 
+    hsl(320, 20%, 60%) 98%, 
+    transparent 100%);
+  height: 2px;
+  position: relative;
+}
+
+.clothespin {
+  width: 8px;
+  height: 20px;
+  background: linear-gradient(135deg, #8B4513, #A0522D);
+  border-radius: 2px;
+  position: absolute;
+  top: -10px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.gradient-bg {
+  background: linear-gradient(135deg, 
+    hsl(320, 15%, 97%) 0%, 
+    hsl(310, 20%, 95%) 50%, 
+    hsl(320, 15%, 97%) 100%);
+}
+
+.pattern-alert {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+.floating-form {
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.95);
+}
+
+/* Additional utility classes for the tendedero theme */
+.scale-102 {
+  transform: scale(1.02);
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Custom focus styles for better accessibility */
+.focus\:ring-2:focus {
+  box-shadow: 0 0 0 2px var(--ring);
+}
+
+/* Responsive adjustments for mobile tendedero cards */
+@media (max-width: 768px) {
+  .tendedero-card {
+    transform: rotate(0deg);
+  }
+  
+  .tendedero-card:nth-child(even),
+  .tendedero-card:nth-child(3n) {
+    transform: rotate(0deg);
+  }
+}
+
+/* Custom button hover effects */
+.hover\:bg-primary\/90:hover {
+  background-color: hsl(278, 96%, 34%, 0.9);
+}
+
+.hover\:bg-secondary\/90:hover {
+  background-color: hsl(310, 95%, 38%, 0.9);
+}
+
+.hover\:bg-accent\/90:hover {
+  background-color: hsl(130, 95%, 32%, 0.9);
+}
+
+/* Loading animation improvements */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* Backdrop blur utilities */
+.backdrop-blur-sm {
+  backdrop-filter: blur(4px);
+}
+
+.backdrop-blur-md {
+  backdrop-filter: blur(8px);
+}
+
+/* Glass morphism effect */
+.glass {
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+/* Enhanced card shadows for depth */
+.card-shadow {
+  box-shadow: 
+    0 4px 6px -1px rgba(107, 2, 167, 0.1),
+    0 2px 4px -1px rgba(107, 2, 167, 0.06);
+}
+
+.card-shadow:hover {
+  box-shadow: 
+    0 20px 25px -5px rgba(107, 2, 167, 0.1),
+    0 10px 10px -5px rgba(107, 2, 167, 0.04);
+}
