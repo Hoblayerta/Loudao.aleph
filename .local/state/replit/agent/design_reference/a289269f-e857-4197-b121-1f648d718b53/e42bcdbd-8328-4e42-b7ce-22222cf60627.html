@@ -1,0 +1,1152 @@
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LouDao - Plataforma de Denuncias de Violencia de Género</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                borderRadius: {
+                    lg: "var(--radius)",
+                    md: "calc(var(--radius) - 2px)",
+                    sm: "calc(var(--radius) - 4px)",
+                },
+                colors: {
+                    background: "var(--background)",
+                    foreground: "var(--foreground)",
+                    card: {
+                        DEFAULT: "var(--card)",
+                        foreground: "var(--card-foreground)",
+                    },
+                    primary: {
+                        DEFAULT: "var(--primary)",
+                        foreground: "var(--primary-foreground)",
+                    },
+                    secondary: {
+                        DEFAULT: "var(--secondary)",
+                        foreground: "var(--secondary-foreground)",
+                    },
+                    muted: {
+                        DEFAULT: "var(--muted)",
+                        foreground: "var(--muted-foreground)",
+                    },
+                    accent: {
+                        DEFAULT: "var(--accent)",
+                        foreground: "var(--accent-foreground)",
+                    },
+                    destructive: {
+                        DEFAULT: "var(--destructive)",
+                        foreground: "var(--destructive-foreground)",
+                    },
+                    border: "var(--border)",
+                    input: "var(--input)",
+                    ring: "var(--ring)",
+                }
+            }
+        }
+    };
+    </script>
+    <style>
+        :root {
+            --background: hsl(320 15% 97%);
+            --foreground: hsl(320 10% 15%);
+            --card: hsl(0 0% 100%);
+            --card-foreground: hsl(320 10% 15%);
+            --primary: hsl(278 96% 34%);
+            --primary-foreground: hsl(0 0% 100%);
+            --secondary: hsl(310 95% 38%);
+            --secondary-foreground: hsl(0 0% 100%);
+            --muted: hsl(320 15% 94%);
+            --muted-foreground: hsl(320 10% 45%);
+            --accent: hsl(130 95% 32%);
+            --accent-foreground: hsl(0 0% 100%);
+            --destructive: hsl(0 84% 60%);
+            --destructive-foreground: hsl(0 0% 100%);
+            --border: hsl(320 20% 88%);
+            --input: hsl(320 20% 92%);
+            --ring: hsl(278 96% 34%);
+            --radius: 0.75rem;
+        }
+
+        .tendedero-card {
+            transform: rotate(-1deg);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .tendedero-card:nth-child(even) {
+            transform: rotate(1deg);
+        }
+
+        .tendedero-card:nth-child(3n) {
+            transform: rotate(-0.5deg);
+        }
+
+        .tendedero-card:hover {
+            transform: rotate(0deg) scale(1.02);
+            z-index: 10;
+        }
+
+        .clip-shadow {
+            box-shadow: 
+                0 -5px 10px rgba(107, 2, 167, 0.1),
+                0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .clothesline {
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                hsl(320 20% 60%) 2%, 
+                hsl(320 20% 60%) 98%, 
+                transparent 100%);
+            height: 2px;
+            position: relative;
+        }
+
+        .clothespin {
+            width: 8px;
+            height: 20px;
+            background: linear-gradient(135deg, #8B4513, #A0522D);
+            border-radius: 2px;
+            position: absolute;
+            top: -10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, 
+                hsl(320 15% 97%) 0%, 
+                hsl(310 20% 95%) 50%, 
+                hsl(320 15% 97%) 100%);
+        }
+
+        .pattern-alert {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .floating-form {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.95);
+        }
+    </style>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="gradient-bg min-h-screen">
+    <!-- Navigation Header -->
+    <nav class="bg-white/80 backdrop-blur-md shadow-sm border-b border-border sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <div class="flex items-center space-x-3">
+                    <!-- LouDao logo integration -->
+                    <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAgADsDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD3+iiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigD//2Q==" alt="LouDao" class="h-8 w-auto">
+                    <span class="text-2xl font-bold text-primary">LouDao</span>
+                </div>
+
+                <!-- Navigation Links -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#tendedero" class="text-foreground hover:text-primary transition-colors">Tendedero</a>
+                    <a href="#reportar" class="text-foreground hover:text-primary transition-colors">Reportar</a>
+                    <a href="#analytics" class="text-foreground hover:text-primary transition-colors">Analytics</a>
+                    <a href="#apoyo" class="text-foreground hover:text-primary transition-colors">Apoyo</a>
+                </div>
+
+                <!-- Wallet Connection -->
+                <div class="flex items-center space-x-4">
+                    <button id="connectWallet" class="bg-primary text-primary-foreground px-4 py-2 rounded-lg hover:bg-primary/90 transition-colors">
+                        <i class="fas fa-wallet mr-2"></i>
+                        Conectar Wallet
+                    </button>
+                    <div id="networkStatus" class="hidden text-sm text-muted-foreground">
+                        <span class="inline-block w-2 h-2 bg-accent rounded-full mr-2"></span>
+                        Lisk Sepolia
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="py-16 px-4">
+        <div class="max-w-4xl mx-auto text-center">
+            <h1 class="text-4xl md:text-6xl font-bold text-foreground mb-6">
+                <span class="text-primary">Tendedero</span> Digital de 
+                <span class="text-secondary">Denuncias</span>
+            </h1>
+            <p class="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+                Una plataforma híbrida que combina transparencia pública con privacidad inteligente 
+                para denunciar violencia de género utilizando tecnología blockchain.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <button onclick="scrollToSection('reportar')" class="bg-primary text-primary-foreground px-8 py-3 rounded-lg hover:bg-primary/90 transition-colors text-lg font-semibold">
+                    <i class="fas fa-plus mr-2"></i>
+                    Hacer Denuncia
+                </button>
+                <button onclick="scrollToSection('tendedero')" class="bg-secondary text-secondary-foreground px-8 py-3 rounded-lg hover:bg-secondary/90 transition-colors text-lg font-semibold">
+                    <i class="fas fa-eye mr-2"></i>
+                    Ver Tendedero
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Statistics Bar -->
+    <section class="bg-white/50 py-8 border-y border-border">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
+                <div>
+                    <div class="text-3xl font-bold text-primary" data-bind="totalReports">127</div>
+                    <div class="text-muted-foreground">Denuncias Totales</div>
+                </div>
+                <div>
+                    <div class="text-3xl font-bold text-secondary" data-bind="uniqueAggressors">89</div>
+                    <div class="text-muted-foreground">Agresores Únicos</div>
+                </div>
+                <div>
+                    <div class="text-3xl font-bold text-accent" data-bind="patternsDetected">23</div>
+                    <div class="text-muted-foreground">Patrones Detectados</div>
+                </div>
+                <div>
+                    <div class="text-3xl font-bold text-destructive" data-bind="supportOrganizations">15</div>
+                    <div class="text-muted-foreground">Organizaciones de Apoyo</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Report Form Section -->
+    <section id="reportar" class="py-16 px-4">
+        <div class="max-w-4xl mx-auto">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-foreground mb-4">Hacer una Denuncia</h2>
+                <p class="text-muted-foreground max-w-2xl mx-auto">
+                    Tu información personal permanece privada y cifrada. Solo los datos del agresor e institución serán públicos.
+                </p>
+            </div>
+
+            <div class="floating-form rounded-2xl p-8 clip-shadow">
+                <form id="reportForm" class="space-y-8">
+                    <!-- Public Data Section -->
+                    <div class="bg-card rounded-xl p-6 border border-border">
+                        <h3 class="text-xl font-semibold text-foreground mb-4 flex items-center">
+                            <i class="fas fa-eye text-primary mr-3"></i>
+                            Información Pública (Visible en el Tendedero)
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-foreground mb-2">Nombre del Agresor *</label>
+                                <input type="text" id="aggressorName" name="aggressorName" required 
+                                       class="w-full px-4 py-3 border border-border rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent"
+                                       placeholder="Nombre completo del agresor">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-foreground mb-2">Institución *</label>
+                                <input type="text" id="institution" name="institution" required
+                                       class="w-full px-4 py-3 border border-border rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent"
+                                       placeholder="Empresa, universidad, organización">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-foreground mb-2">Año del Incidente *</label>
+                                <select id="incidentYear" name="incidentYear" required
+                                        class="w-full px-4 py-3 border border-border rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent">
+                                    <option value="">Seleccionar año</option>
+                                    <option value="2024">2024</option>
+                                    <option value="2023">2023</option>
+                                    <option value="2022">2022</option>
+                                    <option value="2021">2021</option>
+                                    <option value="2020">2020</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-foreground mb-2">Ciudad</label>
+                                <input type="text" id="city" name="city"
+                                       class="w-full px-4 py-3 border border-border rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent"
+                                       placeholder="Ciudad donde ocurrió">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="block text-sm font-medium text-foreground mb-2">Descripción General *</label>
+                                <textarea id="description" name="description" required rows="4"
+                                          class="w-full px-4 py-3 border border-border rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent"
+                                          placeholder="Describe brevemente el incidente (sin detalles que puedan identificarte)"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Private Data Section -->
+                    <div class="bg-muted rounded-xl p-6 border border-border">
+                        <h3 class="text-xl font-semibold text-foreground mb-4 flex items-center">
+                            <i class="fas fa-lock text-accent mr-3"></i>
+                            Información Privada (Cifrada con FHE)
+                        </h3>
+                        <p class="text-sm text-muted-foreground mb-6">
+                            Esta información se cifra antes de enviarse y solo se usa para análisis estadísticos anónimos.
+                        </p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-foreground mb-2">Tu Edad</label>
+                                <select id="victimAge" name="victimAge"
+                                        class="w-full px-4 py-3 border border-border rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent">
+                                    <option value="">Seleccionar rango</option>
+                                    <option value="1">18-25 años</option>
+                                    <option value="2">26-35 años</option>
+                                    <option value="3">36-45 años</option>
+                                    <option value="4">46-55 años</option>
+                                    <option value="5">56+ años</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-foreground mb-2">Relación con el Agresor</label>
+                                <select id="relationshipType" name="relationshipType"
+                                        class="w-full px-4 py-3 border border-border rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent">
+                                    <option value="">Seleccionar relación</option>
+                                    <option value="1">Desconocido</option>
+                                    <option value="2">Jefe/Superior</option>
+                                    <option value="3">Compañero de trabajo</option>
+                                    <option value="4">Profesor/Autoridad académica</option>
+                                    <option value="5">Pareja/Ex-pareja</option>
+                                    <option value="6">Conocido</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-foreground mb-2">Tipo de Violencia</label>
+                                <select id="violenceType" name="violenceType"
+                                        class="w-full px-4 py-3 border border-border rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent">
+                                    <option value="">Seleccionar tipo</option>
+                                    <option value="1">Acoso verbal</option>
+                                    <option value="2">Acoso físico</option>
+                                    <option value="3">Discriminación</option>
+                                    <option value="4">Abuso de poder</option>
+                                    <option value="5">Violencia psicológica</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-foreground mb-2">Nivel de Urgencia</label>
+                                <select id="urgencyLevel" name="urgencyLevel"
+                                        class="w-full px-4 py-3 border border-border rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent">
+                                    <option value="">Seleccionar urgencia</option>
+                                    <option value="1">Baja - Situación controlada</option>
+                                    <option value="2">Media - Requiere atención</option>
+                                    <option value="3">Alta - Situación continua</option>
+                                    <option value="4">Crítica - Riesgo inmediato</option>
+                                    <option value="5">Emergencia - Peligro extremo</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Encryption Status -->
+                    <div id="encryptionStatus" class="hidden bg-accent/10 border border-accent/20 rounded-lg p-4">
+                        <div class="flex items-center text-accent">
+                            <i class="fas fa-shield-alt mr-3"></i>
+                            <span>Cifrando datos privados con FHEVM...</span>
+                            <div class="ml-auto">
+                                <div class="w-6 h-6 border-2 border-accent border-t-transparent rounded-full animate-spin"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="text-center">
+                        <button type="submit" class="bg-primary text-primary-foreground px-12 py-4 rounded-lg hover:bg-primary/90 transition-colors text-lg font-semibold">
+                            <i class="fas fa-paper-plane mr-3"></i>
+                            Enviar Denuncia a Blockchain
+                        </button>
+                        <p class="text-sm text-muted-foreground mt-4">
+                            Al enviar, aceptas que la información pública será visible en el tendedero.
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tendedero Section -->
+    <section id="tendedero" class="py-16 px-4 bg-white/30">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-foreground mb-4">Tendedero de Denuncias</h2>
+                <p class="text-muted-foreground max-w-2xl mx-auto">
+                    Todas las denuncias públicas están aquí. La información privada permanece cifrada y se usa solo para análisis.
+                </p>
+            </div>
+
+            <!-- Filters -->
+            <div class="bg-white/80 rounded-xl p-6 mb-8 clip-shadow">
+                <div class="flex flex-col lg:flex-row gap-4 items-center justify-between">
+                    <div class="flex flex-col sm:flex-row gap-4 flex-1">
+                        <input type="text" id="searchAggressor" placeholder="Buscar agresor..." 
+                               class="px-4 py-2 border border-border rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent">
+                        <select id="filterYear" class="px-4 py-2 border border-border rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent">
+                            <option value="">Todos los años</option>
+                            <option value="2024">2024</option>
+                            <option value="2023">2023</option>
+                            <option value="2022">2022</option>
+                        </select>
+                        <select id="filterInstitution" class="px-4 py-2 border border-border rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent">
+                            <option value="">Todas las instituciones</option>
+                            <option value="Universidad">Universidades</option>
+                            <option value="Empresa">Empresas</option>
+                            <option value="Gobierno">Gobierno</option>
+                        </select>
+                    </div>
+                    <div class="text-sm text-muted-foreground">
+                        <span data-bind="filteredCount">127</span> denuncias encontradas
+                    </div>
+                </div>
+            </div>
+
+            <!-- Clothesline -->
+            <div class="clothesline mb-8 relative">
+                <div class="clothespin" style="left: 10%;"></div>
+                <div class="clothespin" style="left: 30%;"></div>
+                <div class="clothespin" style="left: 50%;"></div>
+                <div class="clothespin" style="left: 70%;"></div>
+                <div class="clothespin" style="left: 90%;"></div>
+            </div>
+
+            <!-- Report Cards Grid -->
+            <!-- @MAP: reports.map(report => ( -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="reportsGrid">
+                <!-- Sample Report Card 1 -->
+                <div class="tendedero-card bg-card rounded-xl p-6 clip-shadow cursor-pointer" onclick="openReportModal(1)">
+                    <div class="pattern-alert bg-destructive/10 border border-destructive/20 rounded-lg p-2 mb-4">
+                        <div class="flex items-center text-destructive text-sm">
+                            <i class="fas fa-exclamation-triangle mr-2"></i>
+                            <span>⚠️ 3 denuncias más contra este agresor</span>
+                        </div>
+                    </div>
+                    <h3 class="font-bold text-lg text-foreground mb-2" data-bind="report.aggressor">Carlos Mendoza</h3>
+                    <p class="text-secondary font-medium mb-2" data-bind="report.institution">Universidad Tecnológica</p>
+                    <p class="text-muted-foreground text-sm mb-3" data-bind="report.description">Acoso sistemático hacia estudiantes durante clases y asesorías. Comentarios inapropiados y...</p>
+                    <div class="flex justify-between items-center text-xs text-muted-foreground">
+                        <span data-bind="report.year">2024</span>
+                        <span data-bind="report.date">Hace 3 días</span>
+                    </div>
+                    <div class="mt-4 flex gap-2">
+                        <span class="bg-primary/10 text-primary px-2 py-1 rounded-full text-xs">Educación</span>
+                        <span class="bg-destructive/10 text-destructive px-2 py-1 rounded-full text-xs">Patrón detectado</span>
+                    </div>
+                </div>
+
+                <!-- Sample Report Card 2 -->
+                <div class="tendedero-card bg-card rounded-xl p-6 clip-shadow cursor-pointer" onclick="openReportModal(2)">
+                    <h3 class="font-bold text-lg text-foreground mb-2" data-bind="report.aggressor">Miguel Torres</h3>
+                    <p class="text-secondary font-medium mb-2" data-bind="report.institution">Corporativo Global SA</p>
+                    <p class="text-muted-foreground text-sm mb-3" data-bind="report.description">Discriminación salarial y exclusión de proyectos importantes. Ambiente laboral hostil...</p>
+                    <div class="flex justify-between items-center text-xs text-muted-foreground">
+                        <span data-bind="report.year">2024</span>
+                        <span data-bind="report.date">Hace 1 semana</span>
+                    </div>
+                    <div class="mt-4 flex gap-2">
+                        <span class="bg-secondary/10 text-secondary px-2 py-1 rounded-full text-xs">Laboral</span>
+                    </div>
+                </div>
+
+                <!-- Sample Report Card 3 -->
+                <div class="tendedero-card bg-card rounded-xl p-6 clip-shadow cursor-pointer" onclick="openReportModal(3)">
+                    <h3 class="font-bold text-lg text-foreground mb-2" data-bind="report.aggressor">Roberto Silva</h3>
+                    <p class="text-secondary font-medium mb-2" data-bind="report.institution">Hospital Central</p>
+                    <p class="text-muted-foreground text-sm mb-3" data-bind="report.description">Abuso de poder durante guardias nocturnas. Comportamiento inapropiado...</p>
+                    <div class="flex justify-between items-center text-xs text-muted-foreground">
+                        <span data-bind="report.year">2023</span>
+                        <span data-bind="report.date">Hace 2 semanas</span>
+                    </div>
+                    <div class="mt-4 flex gap-2">
+                        <span class="bg-accent/10 text-accent px-2 py-1 rounded-full text-xs">Salud</span>
+                    </div>
+                </div>
+
+                <!-- Sample Report Card 4 -->
+                <div class="tendedero-card bg-card rounded-xl p-6 clip-shadow cursor-pointer" onclick="openReportModal(4)">
+                    <div class="pattern-alert bg-destructive/10 border border-destructive/20 rounded-lg p-2 mb-4">
+                        <div class="flex items-center text-destructive text-sm">
+                            <i class="fas fa-exclamation-triangle mr-2"></i>
+                            <span>⚠️ 2 denuncias más contra este agresor</span>
+                        </div>
+                    </div>
+                    <h3 class="font-bold text-lg text-foreground mb-2" data-bind="report.aggressor">Eduardo Ramírez</h3>
+                    <p class="text-secondary font-medium mb-2" data-bind="report.institution">Gobierno Municipal</p>
+                    <p class="text-muted-foreground text-sm mb-3" data-bind="report.description">Acoso durante trámites administrativos. Solicitudes inapropiadas...</p>
+                    <div class="flex justify-between items-center text-xs text-muted-foreground">
+                        <span data-bind="report.year">2024</span>
+                        <span data-bind="report.date">Hace 4 días</span>
+                    </div>
+                    <div class="mt-4 flex gap-2">
+                        <span class="bg-primary/10 text-primary px-2 py-1 rounded-full text-xs">Gobierno</span>
+                        <span class="bg-destructive/10 text-destructive px-2 py-1 rounded-full text-xs">Patrón detectado</span>
+                    </div>
+                </div>
+
+                <!-- Sample Report Card 5 -->
+                <div class="tendedero-card bg-card rounded-xl p-6 clip-shadow cursor-pointer" onclick="openReportModal(5)">
+                    <h3 class="font-bold text-lg text-foreground mb-2" data-bind="report.aggressor">Antonio López</h3>
+                    <p class="text-secondary font-medium mb-2" data-bind="report.institution">Empresa Consultora</p>
+                    <p class="text-muted-foreground text-sm mb-3" data-bind="report.description">Comentarios sexistas en reuniones. Exclusión de decisiones importantes...</p>
+                    <div class="flex justify-between items-center text-xs text-muted-foreground">
+                        <span data-bind="report.year">2023</span>
+                        <span data-bind="report.date">Hace 3 semanas</span>
+                    </div>
+                    <div class="mt-4 flex gap-2">
+                        <span class="bg-secondary/10 text-secondary px-2 py-1 rounded-full text-xs">Consultoría</span>
+                    </div>
+                </div>
+
+                <!-- Sample Report Card 6 -->
+                <div class="tendedero-card bg-card rounded-xl p-6 clip-shadow cursor-pointer" onclick="openReportModal(6)">
+                    <h3 class="font-bold text-lg text-foreground mb-2" data-bind="report.aggressor">Fernando García</h3>
+                    <p class="text-secondary font-medium mb-2" data-bind="report.institution">Instituto de Investigación</p>
+                    <p class="text-muted-foreground text-sm mb-3" data-bind="report.description">Presión para participar en actividades fuera del horario laboral...</p>
+                    <div class="flex justify-between items-center text-xs text-muted-foreground">
+                        <span data-bind="report.year">2024</span>
+                        <span data-bind="report.date">Hace 5 días</span>
+                    </div>
+                    <div class="mt-4 flex gap-2">
+                        <span class="bg-accent/10 text-accent px-2 py-1 rounded-full text-xs">Investigación</span>
+                    </div>
+                </div>
+            </div>
+            <!-- @END_MAP -->
+
+            <!-- Load More Button -->
+            <div class="text-center mt-12">
+                <button class="bg-muted text-foreground px-8 py-3 rounded-lg hover:bg-muted/80 transition-colors">
+                    <i class="fas fa-plus mr-2"></i>
+                    Cargar más denuncias
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Analytics Section -->
+    <section id="analytics" class="py-16 px-4">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-foreground mb-4">Análisis Privado con FHE</h2>
+                <p class="text-muted-foreground max-w-2xl mx-auto">
+                    Estadísticas calculadas de forma cifrada sin revelar información individual de las víctimas.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Demographics Analytics -->
+                <div class="bg-white/80 rounded-xl p-6 clip-shadow">
+                    <h3 class="text-xl font-semibold text-foreground mb-6 flex items-center">
+                        <i class="fas fa-chart-bar text-primary mr-3"></i>
+                        Análisis Demográfico
+                    </h3>
+                    <div class="space-y-6">
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-muted-foreground">Edad promedio de víctimas</span>
+                                <span class="font-semibold text-foreground" data-bind="analytics.averageAge">29.4 años</span>
+                            </div>
+                            <div class="text-xs text-muted-foreground">Calculado con cifrado homomórfico</div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-muted-foreground">Relación más común</span>
+                                <span class="font-semibold text-secondary" data-bind="analytics.commonRelation">Jefe/Superior (34%)</span>
+                            </div>
+                            <div class="w-full bg-muted rounded-full h-2">
+                                <div class="bg-secondary h-2 rounded-full" style="width: 34%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-muted-foreground">Tipo de violencia más reportado</span>
+                                <span class="font-semibold text-accent" data-bind="analytics.commonViolence">Acoso verbal (28%)</span>
+                            </div>
+                            <div class="w-full bg-muted rounded-full h-2">
+                                <div class="bg-accent h-2 rounded-full" style="width: 28%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Institutional Analytics -->
+                <div class="bg-white/80 rounded-xl p-6 clip-shadow">
+                    <h3 class="text-xl font-semibold text-foreground mb-6 flex items-center">
+                        <i class="fas fa-building text-secondary mr-3"></i>
+                        Análisis Institucional
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center p-3 bg-muted rounded-lg">
+                            <span class="font-medium">Universidades</span>
+                            <span class="bg-primary text-primary-foreground px-3 py-1 rounded-full text-sm">34 casos</span>
+                        </div>
+                        <div class="flex justify-between items-center p-3 bg-muted rounded-lg">
+                            <span class="font-medium">Empresas privadas</span>
+                            <span class="bg-secondary text-secondary-foreground px-3 py-1 rounded-full text-sm">28 casos</span>
+                        </div>
+                        <div class="flex justify-between items-center p-3 bg-muted rounded-lg">
+                            <span class="font-medium">Instituciones públicas</span>
+                            <span class="bg-accent text-accent-foreground px-3 py-1 rounded-full text-sm">19 casos</span>
+                        </div>
+                        <div class="flex justify-between items-center p-3 bg-muted rounded-lg">
+                            <span class="font-medium">Organizaciones de salud</span>
+                            <span class="bg-destructive text-destructive-foreground px-3 py-1 rounded-full text-sm">15 casos</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Urgency Analytics -->
+                <div class="bg-white/80 rounded-xl p-6 clip-shadow">
+                    <h3 class="text-xl font-semibold text-foreground mb-6 flex items-center">
+                        <i class="fas fa-exclamation-circle text-destructive mr-3"></i>
+                        Niveles de Urgencia
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-muted-foreground">Crítica/Emergencia</span>
+                            <div class="flex items-center">
+                                <div class="w-20 h-2 bg-muted rounded-full mr-3">
+                                    <div class="h-2 bg-destructive rounded-full" style="width: 12%"></div>
+                                </div>
+                                <span class="text-sm font-medium">12%</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-muted-foreground">Alta</span>
+                            <div class="flex items-center">
+                                <div class="w-20 h-2 bg-muted rounded-full mr-3">
+                                    <div class="h-2 bg-orange-500 rounded-full" style="width: 23%"></div>
+                                </div>
+                                <span class="text-sm font-medium">23%</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-muted-foreground">Media</span>
+                            <div class="flex items-center">
+                                <div class="w-20 h-2 bg-muted rounded-full mr-3">
+                                    <div class="h-2 bg-yellow-500 rounded-full" style="width: 41%"></div>
+                                </div>
+                                <span class="text-sm font-medium">41%</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-muted-foreground">Baja</span>
+                            <div class="flex items-center">
+                                <div class="w-20 h-2 bg-muted rounded-full mr-3">
+                                    <div class="h-2 bg-accent rounded-full" style="width: 24%"></div>
+                                </div>
+                                <span class="text-sm font-medium">24%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pattern Matching -->
+                <div class="bg-white/80 rounded-xl p-6 clip-shadow">
+                    <h3 class="text-xl font-semibold text-foreground mb-6 flex items-center">
+                        <i class="fas fa-search text-accent mr-3"></i>
+                        Detección de Patrones
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="bg-destructive/10 border border-destructive/20 rounded-lg p-4">
+                            <div class="flex items-center text-destructive mb-2">
+                                <i class="fas fa-exclamation-triangle mr-2"></i>
+                                <span class="font-semibold">23 Agresores con Múltiples Denuncias</span>
+                            </div>
+                            <p class="text-sm text-muted-foreground">
+                                Sistema de patrón automático detectó agresores recurrentes sin revelar identidades de víctimas.
+                            </p>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4 text-center">
+                            <div class="bg-muted rounded-lg p-3">
+                                <div class="text-2xl font-bold text-destructive">89%</div>
+                                <div class="text-xs text-muted-foreground">Precisión de detección</div>
+                            </div>
+                            <div class="bg-muted rounded-lg p-3">
+                                <div class="text-2xl font-bold text-accent">15</div>
+                                <div class="text-xs text-muted-foreground">Casos validados por comunidad</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Support Directory Section -->
+    <section id="apoyo" class="py-16 px-4 bg-white/30">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-foreground mb-4">Directorio de Apoyo</h2>
+                <p class="text-muted-foreground max-w-2xl mx-auto">
+                    Organizaciones verificadas en México que brindan apoyo integral a víctimas de violencia de género.
+                </p>
+            </div>
+
+            <!-- Support Categories -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Emergency Support -->
+                <div class="bg-destructive/10 rounded-xl p-6 border border-destructive/20">
+                    <h3 class="text-xl font-semibold text-destructive mb-4 flex items-center">
+                        <i class="fas fa-phone-alt mr-3"></i>
+                        Emergencias
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="bg-white/80 rounded-lg p-4">
+                            <h4 class="font-semibold text-foreground">LOCATEL Emergencias</h4>
+                            <p class="text-sm text-muted-foreground mb-2">Ciudad de México - Emergencias</p>
+                            <p class="text-destructive font-semibold">56-58-1111</p>
+                            <button class="text-xs bg-destructive text-destructive-foreground px-3 py-1 rounded-full mt-2">
+                                Llamar ahora
+                            </button>
+                        </div>
+                        <div class="bg-white/80 rounded-lg p-4">
+                            <h4 class="font-semibold text-foreground">911 Nacional</h4>
+                            <p class="text-sm text-muted-foreground mb-2">Nacional - Emergencias</p>
+                            <p class="text-destructive font-semibold">911</p>
+                            <button class="text-xs bg-destructive text-destructive-foreground px-3 py-1 rounded-full mt-2">
+                                Llamar ahora
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Government Support -->
+                <div class="bg-primary/10 rounded-xl p-6 border border-primary/20">
+                    <h3 class="text-xl font-semibold text-primary mb-4 flex items-center">
+                        <i class="fas fa-landmark mr-3"></i>
+                        Gobierno
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="bg-white/80 rounded-lg p-4">
+                            <h4 class="font-semibold text-foreground">CAVI CDMX</h4>
+                            <p class="text-sm text-muted-foreground mb-2">Ciudad de México - Atención a víctimas</p>
+                            <p class="text-primary font-semibold">555-533-5533</p>
+                            <div class="flex gap-2 mt-2">
+                                <button class="text-xs bg-primary text-primary-foreground px-3 py-1 rounded-full">
+                                    Contactar
+                                </button>
+                                <button class="text-xs border border-primary text-primary px-3 py-1 rounded-full">
+                                    Ubicación
+                                </button>
+                            </div>
+                        </div>
+                        <div class="bg-white/80 rounded-lg p-4">
+                            <h4 class="font-semibold text-foreground">Instituto Nacional de las Mujeres</h4>
+                            <p class="text-sm text-muted-foreground mb-2">Nacional - Apoyo integral</p>
+                            <p class="text-primary font-semibold">01-800-911-2511</p>
+                            <div class="flex gap-2 mt-2">
+                                <button class="text-xs bg-primary text-primary-foreground px-3 py-1 rounded-full">
+                                    Contactar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- NGO Support -->
+                <div class="bg-secondary/10 rounded-xl p-6 border border-secondary/20">
+                    <h3 class="text-xl font-semibold text-secondary mb-4 flex items-center">
+                        <i class="fas fa-heart mr-3"></i>
+                        Organizaciones
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="bg-white/80 rounded-lg p-4">
+                            <h4 class="font-semibold text-foreground">Red Nacional de Refugios</h4>
+                            <p class="text-sm text-muted-foreground mb-2">Nacional - Refugios seguros</p>
+                            <p class="text-secondary font-semibold">01-800-822-4460</p>
+                            <div class="flex gap-2 mt-2">
+                                <button class="text-xs bg-secondary text-secondary-foreground px-3 py-1 rounded-full">
+                                    Contactar
+                                </button>
+                                <button class="text-xs border border-secondary text-secondary px-3 py-1 rounded-full">
+                                    Web
+                                </button>
+                            </div>
+                        </div>
+                        <div class="bg-white/80 rounded-lg p-4">
+                            <h4 class="font-semibold text-foreground">Fundación Origen</h4>
+                            <p class="text-sm text-muted-foreground mb-2">Nacional - Apoyo psicológico</p>
+                            <p class="text-secondary font-semibold">555-207-8058</p>
+                            <div class="flex gap-2 mt-2">
+                                <button class="text-xs bg-secondary text-secondary-foreground px-3 py-1 rounded-full">
+                                    Contactar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Legal Support -->
+                <div class="bg-accent/10 rounded-xl p-6 border border-accent/20">
+                    <h3 class="text-xl font-semibold text-accent mb-4 flex items-center">
+                        <i class="fas fa-balance-scale mr-3"></i>
+                        Apoyo Legal
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="bg-white/80 rounded-lg p-4">
+                            <h4 class="font-semibold text-foreground">Defensoría Pública</h4>
+                            <p class="text-sm text-muted-foreground mb-2">Ciudad de México - Asesoría gratuita</p>
+                            <p class="text-accent font-semibold">555-627-1700</p>
+                            <div class="flex gap-2 mt-2">
+                                <button class="text-xs bg-accent text-accent-foreground px-3 py-1 rounded-full">
+                                    Asesoría
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Psychological Support -->
+                <div class="bg-orange-100 rounded-xl p-6 border border-orange-200">
+                    <h3 class="text-xl font-semibold text-orange-700 mb-4 flex items-center">
+                        <i class="fas fa-brain mr-3"></i>
+                        Apoyo Psicológico
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="bg-white/80 rounded-lg p-4">
+                            <h4 class="font-semibold text-foreground">SAPTEL</h4>
+                            <p class="text-sm text-muted-foreground mb-2">Nacional - Crisis emocional</p>
+                            <p class="text-orange-700 font-semibold">01-800-472-7835</p>
+                            <div class="flex gap-2 mt-2">
+                                <button class="text-xs bg-orange-500 text-white px-3 py-1 rounded-full">
+                                    24/7
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Smart Recommendations -->
+                <div class="bg-gradient-to-br from-primary/10 to-secondary/10 rounded-xl p-6 border border-primary/20">
+                    <h3 class="text-xl font-semibold text-foreground mb-4 flex items-center">
+                        <i class="fas fa-robot mr-3 text-primary"></i>
+                        Recomendaciones Inteligentes
+                    </h3>
+                    <div class="bg-white/80 rounded-lg p-4">
+                        <p class="text-sm text-muted-foreground mb-3">
+                            Basado en datos cifrados, recomendamos contactar:
+                        </p>
+                        <div class="space-y-2">
+                            <div class="flex items-center text-sm">
+                                <i class="fas fa-check-circle text-accent mr-2"></i>
+                                <span>Red Nacional de Refugios (urgencia alta)</span>
+                            </div>
+                            <div class="flex items-center text-sm">
+                                <i class="fas fa-check-circle text-accent mr-2"></i>
+                                <span>SAPTEL (apoyo emocional)</span>
+                            </div>
+                            <div class="flex items-center text-sm">
+                                <i class="fas fa-check-circle text-accent mr-2"></i>
+                                <span>CAVI (denuncia formal)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-foreground text-background py-12">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center space-x-3 mb-4">
+                        <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAgADsDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD3+iiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigD//2Q==" alt="LouDao" class="h-6 w-auto">
+                        <span class="text-xl font-bold">LouDao</span>
+                    </div>
+                    <p class="text-background/80 text-sm">
+                        Plataforma híbrida para denunciar violencia de género con transparencia y privacidad inteligente.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Enlaces</h4>
+                    <ul class="space-y-2 text-sm text-background/80">
+                        <li><a href="#tendedero" class="hover:text-background transition-colors">Tendedero</a></li>
+                        <li><a href="#reportar" class="hover:text-background transition-colors">Hacer Denuncia</a></li>
+                        <li><a href="#analytics" class="hover:text-background transition-colors">Analytics</a></li>
+                        <li><a href="#apoyo" class="hover:text-background transition-colors">Apoyo</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Tecnología</h4>
+                    <ul class="space-y-2 text-sm text-background/80">
+                        <li>Zama FHEVM</li>
+                        <li>Lisk Sepolia</li>
+                        <li>Cifrado Homomórfico</li>
+                        <li>Blockchain Híbrido</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Emergencias</h4>
+                    <div class="space-y-2 text-sm">
+                        <div class="bg-destructive text-destructive-foreground px-3 py-2 rounded">
+                            <strong>911</strong> - Emergencias nacionales
+                        </div>
+                        <div class="bg-primary text-primary-foreground px-3 py-2 rounded">
+                            <strong>01-800-822-4460</strong> - Red Nacional de Refugios
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-background/20 mt-8 pt-8 text-center text-sm text-background/60">
+                <p>&copy; 2024 LouDao. Construido con tecnología blockchain para la justicia social.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Report Detail Modal -->
+    <div id="reportModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+                <!-- Modal content will be populated by JavaScript -->
+                <div id="modalContent" class="p-8">
+                    <!-- Modal content populated dynamically -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // TODO: Implement business logic, API calls, and state management
+        
+        (function() {
+            'use strict';
+
+            // Mock data for demonstration
+            const mockReports = [
+                {
+                    id: 1,
+                    aggressor: "Carlos Mendoza",
+                    institution: "Universidad Tecnológica",
+                    description: "Acoso sistemático hacia estudiantes durante clases y asesorías. Comentarios inapropiados y contacto físico no deseado.",
+                    year: "2024",
+                    date: "Hace 3 días",
+                    timestamp: new Date(),
+                    patternCount: 3,
+                    category: "Educación",
+                    urgency: "Alta"
+                },
+                // More mock data would be loaded from blockchain...
+            ];
+
+            // Smooth scrolling to sections
+            window.scrollToSection = function(sectionId) {
+                document.getElementById(sectionId).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            };
+
+            // Wallet connection functionality
+            document.getElementById('connectWallet').addEventListener('click', async function() {
+                // TODO: Implement MetaMask connection and network switching
+                if (typeof window.ethereum !== 'undefined') {
+                    try {
+                        // Request account access
+                        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                        
+                        // Check if we're on Lisk Sepolia
+                        const chainId = await window.ethereum.request({ method: 'eth_chainId' });
+                        if (chainId !== '0x106A') { // 4202 in hex
+                            // Switch to Lisk Sepolia
+                            await window.ethereum.request({
+                                method: 'wallet_switchEthereumChain',
+                                params: [{ chainId: '0x106A' }],
+                            });
+                        }
+                        
+                        // Update UI
+                        document.getElementById('connectWallet').textContent = `${accounts[0].substring(0,6)}...${accounts[0].substring(-4)}`;
+                        document.getElementById('networkStatus').classList.remove('hidden');
+                        
+                        console.log('Connected to wallet:', accounts[0]);
+                    } catch (error) {
+                        console.error('Error connecting wallet:', error);
+                        alert('Error connecting wallet. Please ensure MetaMask is installed and try again.');
+                    }
+                } else {
+                    alert('MetaMask is not detected. Please install MetaMask to continue.');
+                }
+            });
+
+            // Report form submission
+            document.getElementById('reportForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                // Show encryption status
+                document.getElementById('encryptionStatus').classList.remove('hidden');
+                
+                // Collect form data
+                const formData = new FormData(e.target);
+                const reportData = {
+                    // Public data
+                    aggressorName: formData.get('aggressorName'),
+                    institution: formData.get('institution'),
+                    description: formData.get('description'),
+                    incidentYear: formData.get('incidentYear'),
+                    city: formData.get('city'),
+                    // Private data (would be encrypted with FHEVM)
+                    victimAge: formData.get('victimAge'),
+                    relationshipType: formData.get('relationshipType'),
+                    violenceType: formData.get('violenceType'),
+                    urgencyLevel: formData.get('urgencyLevel')
+                };
+
+                try {
+                    // TODO: Implement FHEVM encryption for private data
+                    // const encryptedData = await encryptPrivateData(reportData);
+                    
+                    // TODO: Submit to smart contract
+                    // const tx = await contract.submitReport(publicData, encryptedData);
+                    // await tx.wait();
+                    
+                    // Simulate blockchain transaction delay
+                    await new Promise(resolve => setTimeout(resolve, 3000));
+                    
+                    // Hide encryption status
+                    document.getElementById('encryptionStatus').classList.add('hidden');
+                    
+                    // Show success message
+                    alert('Denuncia enviada exitosamente a la blockchain. Se agregará al tendedero en breve.');
+                    
+                    // Reset form
+                    e.target.reset();
+                    
+                    // Scroll to tendedero
+                    scrollToSection('tendedero');
+                    
+                } catch (error) {
+                    console.error('Error submitting report:', error);
+                    document.getElementById('encryptionStatus').classList.add('hidden');
+                    alert('Error al enviar la denuncia. Inténtalo de nuevo.');
+                }
+            });
+
+            // Open report detail modal
+            window.openReportModal = function(reportId) {
+                const modal = document.getElementById('reportModal');
+                const modalContent = document.getElementById('modalContent');
+                
+                // Find report data (would come from blockchain)
+                const report = mockReports.find(r => r.id === reportId) || mockReports[0];
+                
+                modalContent.innerHTML = `
+                    <div class="flex justify-between items-start mb-6">
+                        <h2 class="text-2xl font-bold text-foreground">Detalles de la Denuncia</h2>
+                        <button onclick="closeReportModal()" class="text-muted-foreground hover:text-foreground">
+                            <i class="fas fa-times text-xl"></i>
+                        </button>
+                    </div>
+                    
+                    ${report.patternCount > 1 ? `
+                    <div class="bg-destructive/10 border border-destructive/20 rounded-lg p-4 mb-6">
+                        <div class="flex items-center text-destructive mb-2">
+                            <i class="fas fa-exclamation-triangle mr-2"></i>
+                            <span class="font-semibold">⚠️ ${report.patternCount} denuncias contra este agresor</span>
+                        </div>
+                        <p class="text-sm text-muted-foreground">
+                            Nuestro sistema de detección automática ha identificado múltiples denuncias contra esta persona.
+                        </p>
+                    </div>
+                    ` : ''}
+                    
+                    <div class="space-y-6">
+                        <div>
+                            <h3 class="font-semibold text-foreground mb-2">Agresor</h3>
+                            <p class="text-lg text-primary font-medium">${report.aggressor}</p>
+                        </div>
+                        
+                        <div>
+                            <h3 class="font-semibold text-foreground mb-2">Institución</h3>
+                            <p class="text-secondary font-medium">${report.institution}</p>
+                        </div>
+                        
+                        <div>
+                            <h3 class="font-semibold text-foreground mb-2">Descripción Completa</h3>
+                            <p class="text-muted-foreground leading-relaxed">${report.description}</p>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <h3 class="font-semibold text-foreground mb-2">Año del Incidente</h3>
+                                <p class="text-muted-foreground">${report.year}</p>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-foreground mb-2">Fecha de Reporte</h3>
+                                <p class="text-muted-foreground">${report.date}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="border-t border-border pt-6">
+                            <h3 class="font-semibold text-foreground mb-4">Buscar Apoyo Relevante</h3>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <button onclick="scrollToSection('apoyo'); closeReportModal();" class="bg-accent text-accent-foreground px-4 py-2 rounded-lg hover:bg-accent/90 transition-colors">
+                                    <i class="fas fa-heart mr-2"></i>
+                                    Organizaciones de Apoyo
+                                </button>
+                                <button class="bg-destructive text-destructive-foreground px-4 py-2 rounded-lg hover:bg-destructive/90 transition-colors">
+                                    <i class="fas fa-phone mr-2"></i>
+                                    Emergencias: 911
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-muted rounded-lg p-4">
+                            <p class="text-sm text-muted-foreground">
+                                <i class="fas fa-info-circle mr-2"></i>
+                                Esta denuncia está registrada en blockchain de forma inmutable. 
+                                Los datos privados están cifrados y no pueden ser accedidos individualmente.
+                            </p>
+                        </div>
+                    </div>
+                `;
+                
+                modal.classList.remove('hidden');
+            };
+
+            // Close report modal
+            window.closeReportModal = function() {
+                document.getElementById('reportModal').classList.add('hidden');
+            };
+
+            // Close modal when clicking outside
+            document.getElementById('reportModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeReportModal();
+                }
+            });
+
+            // Search and filter functionality
+            const searchInput = document.getElementById('searchAggressor');
+            const yearFilter = document.getElementById('filterYear');
+            const institutionFilter = document.getElementById('filterInstitution');
+            
+            function filterReports() {
+                // TODO: Implement real filtering with blockchain data
+                console.log('Filtering reports...');
+                // This would filter the displayed cards based on the criteria
+            }
+
+            if (searchInput) {
+                searchInput.addEventListener('input', filterReports);
+                yearFilter.addEventListener('change', filterReports);
+                institutionFilter.addEventListener('change', filterReports);
+            }
+
+            // Initialize the application
+            function init() {
+                console.log('LouDao initialized');
+                // TODO: Load initial data from blockchain
+                // TODO: Setup real-time updates for new reports
+                // TODO: Initialize FHEVM client
+            }
+
+            // Start the application
+            init();
+
+        })();
+    </script>
+</body>
+</html>

@@ -24,8 +24,8 @@ export function TendederoGrid({ reports, isLoading }: TendederoGridProps) {
       report.aggressorName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       report.institution.toLowerCase().includes(searchTerm.toLowerCase());
     
-    const matchesYear = !filterYear || report.incidentYear.toString() === filterYear;
-    const matchesInstitution = !filterInstitution || report.category === filterInstitution;
+    const matchesYear = !filterYear || filterYear === 'all' || report.incidentYear.toString() === filterYear;
+    const matchesInstitution = !filterInstitution || filterInstitution === 'all' || report.category === filterInstitution;
 
     return matchesSearch && matchesYear && matchesInstitution;
   });
@@ -55,7 +55,7 @@ export function TendederoGrid({ reports, isLoading }: TendederoGridProps) {
                 <SelectValue placeholder="Todos los años" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Todos los años</SelectItem>
+                <SelectItem value="all">Todos los años</SelectItem>
                 {years.map(year => (
                   <SelectItem key={year} value={year.toString()}>{year}</SelectItem>
                 ))}
@@ -67,7 +67,7 @@ export function TendederoGrid({ reports, isLoading }: TendederoGridProps) {
                 <SelectValue placeholder="Todas las categorías" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Todas las categorías</SelectItem>
+                <SelectItem value="all">Todas las categorías</SelectItem>
                 {categories.map(category => (
                   <SelectItem key={category} value={category!}>{category}</SelectItem>
                 ))}

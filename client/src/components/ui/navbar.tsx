@@ -2,12 +2,13 @@ import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { Button } from "./button";
 import { blockchainService } from "@/lib/blockchain";
-import { Wallet, Shield } from "lucide-react";
+import { Wallet, Shield, Menu, X } from "lucide-react";
 
 export function Navbar() {
   const [location] = useLocation();
   const [isConnected, setIsConnected] = useState(false);
   const [walletAddress, setWalletAddress] = useState<string>("");
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     checkWalletConnection();
@@ -71,8 +72,19 @@ export function Navbar() {
             </Link>
           </div>
 
+          {/* Mobile menu button */}
+          <div className="md:hidden">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            >
+              {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            </Button>
+          </div>
+
           {/* Wallet Connection */}
-          <div className="flex items-center space-x-4">
+          <div className="hidden md:flex items-center space-x-4">
             {isConnected ? (
               <div className="flex items-center space-x-2">
                 <Button variant="outline" className="text-sm" data-testid="wallet-connected">
@@ -93,6 +105,72 @@ export function Navbar() {
             )}
           </div>
         </div>
+        
+        {/* Mobile Menu */}
+        {isMobileMenuOpen && (
+          <div className="md:hidden">
+            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-card border-t border-border">
+              <Link 
+                href="/tendedero" 
+                className={`block px-3 py-2 rounded-md text-base font-medium transition-colors ${
+                  location === '/tendedero' ? 'text-primary bg-primary/10' : 'text-foreground hover:text-primary hover:bg-muted'
+                }`}
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Clothesline
+              </Link>
+              <Link 
+                href="/reportar" 
+                className={`block px-3 py-2 rounded-md text-base font-medium transition-colors ${
+                  location === '/reportar' ? 'text-primary bg-primary/10' : 'text-foreground hover:text-primary hover:bg-muted'
+                }`}
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Report
+              </Link>
+              <Link 
+                href="/analytics" 
+                className={`block px-3 py-2 rounded-md text-base font-medium transition-colors ${
+                  location === '/analytics' ? 'text-primary bg-primary/10' : 'text-foreground hover:text-primary hover:bg-muted'
+                }`}
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Analytics
+              </Link>
+              <Link 
+                href="/apoyo" 
+                className={`block px-3 py-2 rounded-md text-base font-medium transition-colors ${
+                  location === '/apoyo' ? 'text-primary bg-primary/10' : 'text-foreground hover:text-primary hover:bg-muted'
+                }`}
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Support
+              </Link>
+              
+              {/* Mobile Wallet Connection */}
+              <div className="px-3 py-2">
+                {isConnected ? (
+                  <div className="space-y-2">
+                    <Button variant="outline" className="w-full text-sm" data-testid="wallet-connected-mobile">
+                      <Wallet className="h-4 w-4 mr-2" />
+                      {formatAddress(walletAddress)}
+                    </Button>
+                    <div className="flex items-center justify-center text-sm text-muted-foreground">
+                      <div className="w-2 h-2 bg-accent rounded-full mr-2"></div>
+                      <Shield className="h-4 w-4 mr-1" />
+                      Sepolia Network
+                    </div>
+                  </div>
+                ) : (
+                  <Button onClick={connectWallet} className="w-full" data-testid="button-connect-wallet-mobile">
+                    <Wallet className="h-4 w-4 mr-2" />
+                    Connect Wallet
+                  </Button>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </nav>
   );

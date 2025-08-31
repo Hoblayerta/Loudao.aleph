@@ -47,7 +47,7 @@ export const insertReportSchema = createInsertSchema(reports).omit({
   aggressorName: z.string().min(2, "Nombre del agresor requerido"),
   institution: z.string().min(2, "Institución requerida"),
   description: z.string().min(10, "Descripción debe tener al menos 10 caracteres"),
-  incidentYear: z.number().min(2020).max(2024),
+  incidentYear: z.number().min(2020).max(2025),
   city: z.string().optional(),
   // Private data (will be encrypted)
   victimAge: z.string().optional(),
@@ -75,9 +75,11 @@ export interface PublicReport {
   description: string;
   incidentYear: number;
   city?: string;
-  timestamp: number;
+  timestamp?: number;
   patternCount?: number;
   category?: string;
+  supportOrganizations?: any[];
+  transactionHash?: string;
 }
 
 export interface PrivateAnalytics {

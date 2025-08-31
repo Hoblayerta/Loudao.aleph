@@ -25,11 +25,12 @@ export default function Reportar() {
   const [isEncrypting, setIsEncrypting] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
 
-  // Check wallet connection on mount and periodically
+  // Check wallet connection on mount
   useEffect(() => {
     const checkConnection = async () => {
       try {
         const connected = await blockchainService.isConnected();
+        console.log("Initial connection check:", connected);
         setIsConnected(connected);
       } catch (error) {
         console.error("Error checking connection:", error);
@@ -38,8 +39,6 @@ export default function Reportar() {
     };
     
     checkConnection();
-    const interval = setInterval(checkConnection, 2000);
-    return () => clearInterval(interval);
   }, []);
 
   const form = useForm<InsertReport>({
@@ -64,45 +63,50 @@ export default function Reportar() {
       try {
         console.log("Starting report submission with data:", data);
         
-        // Encrypt private data
+        // Encrypt private data (use defaults if not provided)
         const encryptedData = await fheService.encryptPrivateData({
-          victimAge: data.victimAge,
-          relationshipType: data.relationshipType,
-          violenceType: data.violenceType,
-          urgencyLevel: data.urgencyLevel,
+          victimAge: data.victimAge || '1', // Default to first option
+          relationshipType: data.relationshipType || '1',
+          violenceType: data.violenceType || '1', 
+          urgencyLevel: data.urgencyLevel || '2', // Medium urgency default
         });
         console.log("Encrypted data successfully");
 
-        // Submit to blockchain if connected
+        // Try to connect wallet first if not connected
         console.log("Is wallet connected?", isConnected);
-        console.log("Contract address:", import.meta.env.VITE_CONTRACT_ADDRESS);
         
-        if (isConnected) {
-          console.log("Submitting to blockchain with parameters:");
-          console.log("- Aggressor:", data.aggressorName);
-          console.log("- Institution:", data.institution); 
-          console.log("- Year:", data.incidentYear);
-          console.log("- Description length:", data.description.length);
-          
-          const txHash = await blockchainService.submitReport(
-            data.aggressorName,
-            data.institution,
-            data.description,
-            data.incidentYear,
-            data.city || "",
-            encryptedData
-          );
-          console.log("Transaction successful! Hash:", txHash);
-
-          // Submit to backend with blockchain transaction hash
-          return await apiRequest("POST", "/api/reports", {
-            ...data,
-            transactionHash: txHash,
-          });
-        } else {
-          // Submit to backend only (for demo purposes)
-          return await apiRequest("POST", "/api/reports", data);
+        if (!isConnected) {
+          console.log("Wallet not connected, attempting to connect...");
+          try {
+            const address = await blockchainService.connectWallet();
+            console.log("Wallet connected successfully:", address);
+            setIsConnected(true);
+          } catch (connectError: any) {
+            console.error("Failed to connect wallet:", connectError);
+            throw new Error(`Wallet connection failed: ${connectError.message}`);
+          }
         }
+        
+        console.log("Submitting to blockchain with parameters:");
+        console.log("- Aggressor:", data.aggressorName);
+        console.log("- Institution:", data.institution); 
+        console.log("- Year:", data.incidentYear);
+        console.log("- Description length:", data.description.length);
+        
+        const txHash = await blockchainService.submitReport(
+          data.aggressorName,
+          data.institution,
+          data.description,
+          data.incidentYear,
+          encryptedData
+        );
+        console.log("Transaction successful! Hash:", txHash);
+
+        // Submit to backend with blockchain transaction hash
+        return await apiRequest("POST", "/api/reports", {
+          ...data,
+          transactionHash: txHash,
+        });
       } finally {
         setIsEncrypting(false);
       }
@@ -132,23 +136,20 @@ export default function Reportar() {
     submitReportMutation.mutate(data);
   };
 
-  if (!isConnected) {
-    return (
-      <div className="min-h-screen py-16 px-4">
-        <div className="max-w-md mx-auto">
-          <WalletConnect onConnected={async (address) => {
-            console.log("Wallet connected with address:", address);
-            // Wait a moment for connection to stabilize
-            setTimeout(async () => {
-              const connected = await blockchainService.isConnected();
-              console.log("Connection status after connect:", connected);
-              setIsConnected(connected);
-            }, 1000);
-          }} />
-        </div>
+  // Show connect wallet button in header if not connected
+  const connectWalletButton = !isConnected && (
+    <div className="mb-6">
+      <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+        <p className="text-sm text-yellow-800 mb-3">
+          🔗 Conecta tu wallet para enviar reportes al blockchain de forma segura
+        </p>
+        <WalletConnect onConnected={async (address) => {
+          console.log("Wallet connected with address:", address);
+          setIsConnected(true);
+        }} />
       </div>
-    );
-  }
+    </div>
+  );
 
   return (
     <div className="min-h-screen py-16 px-4">
@@ -160,6 +161,8 @@ export default function Reportar() {
           </p>
         </div>
 
+        {connectWalletButton}
+        
         <div className="floating-form rounded-2xl p-8 clip-shadow">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -222,7 +225,7 @@ export default function Reportar() {
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              {Array.from({ length: 5 }, (_, i) => 2024 - i).map(year => (
+                              {Array.from({ length: 6 }, (_, i) => 2025 - i).map(year => (
                                 <SelectItem key={year} value={year.toString()}>
                                   {year}
                                 </SelectItem>
