@@ -33,7 +33,7 @@ export default function Home() {
             <Link href="/reportar">
               <Button size="lg" className="text-lg font-semibold" data-testid="button-make-report">
                 <Plus className="h-5 w-5 mr-2" />
-                Hacer Denuncia
+                Make Report
               </Button>
             </Link>
             <Link href="/tendedero">

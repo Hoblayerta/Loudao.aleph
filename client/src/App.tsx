@@ -46,41 +46,41 @@ function App() {
                     <span className="text-xl font-bold">LouDao</span>
                   </div>
                   <p className="text-background/80 text-sm">
-                    Plataforma híbrida para denunciar violencia de género con transparencia y privacidad inteligente.
+                    Hybrid platform for reporting gender-based violence with transparency and intelligent privacy.
                   </p>
                 </div>
                 <div>
-                  <h4 className="font-semibold mb-4">Enlaces</h4>
+                  <h4 className="font-semibold mb-4">Links</h4>
                   <ul className="space-y-2 text-sm text-background/80">
-                    <li><a href="/tendedero" className="hover:text-background transition-colors">Tendedero</a></li>
-                    <li><a href="/reportar" className="hover:text-background transition-colors">Hacer Denuncia</a></li>
+                    <li><a href="/tendedero" className="hover:text-background transition-colors">Clothesline</a></li>
+                    <li><a href="/reportar" className="hover:text-background transition-colors">Make Report</a></li>
                     <li><a href="/analytics" className="hover:text-background transition-colors">Analytics</a></li>
-                    <li><a href="/apoyo" className="hover:text-background transition-colors">Apoyo</a></li>
+                    <li><a href="/apoyo" className="hover:text-background transition-colors">Support</a></li>
                   </ul>
                 </div>
                 <div>
-                  <h4 className="font-semibold mb-4">Tecnología</h4>
+                  <h4 className="font-semibold mb-4">Technology</h4>
                   <ul className="space-y-2 text-sm text-background/80">
                     <li>Zama FHEVM</li>
-                    <li>Lisk Sepolia</li>
-                    <li>Cifrado Homomórfico</li>
-                    <li>Blockchain Híbrido</li>
+                    <li>Blockchain Security</li>
+                    <li>Homomorphic Encryption</li>
+                    <li>Hybrid Architecture</li>
                   </ul>
                 </div>
                 <div>
-                  <h4 className="font-semibold mb-4">Emergencias</h4>
+                  <h4 className="font-semibold mb-4">Emergency</h4>
                   <div className="space-y-2 text-sm">
                     <div className="bg-destructive text-destructive-foreground px-3 py-2 rounded">
-                      <strong>911</strong> - Emergencias nacionales
+                      <strong>911</strong> - National Emergency
                     </div>
                     <div className="bg-primary text-primary-foreground px-3 py-2 rounded">
-                      <strong>01-800-822-4460</strong> - Red Nacional de Refugios
+                      <strong>01-800-822-4460</strong> - National Shelter Network
                     </div>
                   </div>
                 </div>
               </div>
               <div className="border-t border-background/20 mt-8 pt-8 text-center text-sm text-background/60">
-                <p>&copy; 2024 LouDao. Construido con tecnología blockchain para la justicia social.</p>
+                <p>&copy; 2024 LouDao. Built with blockchain technology for social justice.</p>
               </div>
             </div>
           </footer>
