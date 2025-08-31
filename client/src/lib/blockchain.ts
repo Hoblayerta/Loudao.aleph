@@ -9,15 +9,290 @@ declare global {
 
 const CONTRACT_ADDRESS = import.meta.env.VITE_CONTRACT_ADDRESS || "";
 const CONTRACT_ABI = [
-  "function submitReport(string,string,string,uint256,bytes,bytes,bytes,bytes) external",
-  "function getAllReports() external view returns (tuple(string,string,string,uint256,uint256,uint256)[])",
-  "function getAggressorReportCount(string) external view returns (uint256)",
-  "function getTotalReports() external view returns (uint256)",
-  "function getUniqueAggressors() external view returns (uint256)",
-  "function getPatternsDetected() external view returns (uint256)",
-  "function getReport(uint256) external view returns (uint256,string,string,string,uint256,string,address,uint256,bool)",
-  "event ReportSubmitted(uint256 indexed,string,string,uint256)",
-  "event PatternMatched(string,uint256)"
+  {
+    "inputs": [],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "aggressor",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "reportCount",
+        "type": "uint256"
+      }
+    ],
+    "name": "PatternMatched",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "reportId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "aggressor",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "institution",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "timestamp",
+        "type": "uint256"
+      }
+    ],
+    "name": "ReportSubmitted",
+    "type": "event"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "aggressor",
+        "type": "string"
+      }
+    ],
+    "name": "getAggressorReportCount",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getAllReports",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "string",
+            "name": "aggressor",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "institution",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256",
+            "name": "year",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "timestamp",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "reportId",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct LouDaoReports.PublicReport[]",
+        "name": "",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getPatternsDetected",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_reportId",
+        "type": "uint256"
+      }
+    ],
+    "name": "getReport",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "id",
+        "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "aggressorName",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "institution",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "description",
+        "type": "string"
+      },
+      {
+        "internalType": "uint256",
+        "name": "incidentYear",
+        "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "city",
+        "type": "string"
+      },
+      {
+        "internalType": "address",
+        "name": "reporter",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "timestamp",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bool",
+        "name": "isActive",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "aggressor",
+        "type": "string"
+      }
+    ],
+    "name": "getReportsByAggressor",
+    "outputs": [
+      {
+        "internalType": "uint256[]",
+        "name": "",
+        "type": "uint256[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getTotalReports",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getUniqueAggressors",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "_aggressor",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "_institution",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "_description",
+        "type": "string"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_year",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bytes",
+        "name": "_victimAgeBytes",
+        "type": "bytes"
+      },
+      {
+        "internalType": "bytes",
+        "name": "_relationshipTypeBytes",
+        "type": "bytes"
+      },
+      {
+        "internalType": "bytes",
+        "name": "_violenceTypeBytes",
+        "type": "bytes"
+      },
+      {
+        "internalType": "bytes",
+        "name": "_urgencyLevelBytes",
+        "type": "bytes"
+      }
+    ],
+    "name": "submitReport",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
 ];
 
 export class BlockchainService {
@@ -90,19 +365,24 @@ export class BlockchainService {
       throw new Error("Contract not initialized. Please connect wallet first.");
     }
 
-    const tx = await this.contract.submitReport(
-      aggressorName,
-      institution,
-      description,
-      incidentYear,
-      encryptedData.victimAge,
-      encryptedData.relationshipType,
-      encryptedData.violenceType,
-      encryptedData.urgencyLevel
-    );
+    try {
+      const tx = await this.contract.submitReport(
+        aggressorName,
+        institution,
+        description,
+        incidentYear,
+        encryptedData.victimAge,
+        encryptedData.relationshipType,
+        encryptedData.violenceType,
+        encryptedData.urgencyLevel
+      );
 
-    const receipt = await tx.wait();
-    return receipt.hash;
+      const receipt = await tx.wait();
+      return receipt.hash;
+    } catch (error) {
+      console.error("Error submitting report:", error);
+      throw error;
+    }
   }
 
   async getAllReports(): Promise<any[]> {
