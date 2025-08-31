@@ -33,34 +33,33 @@ function App() {
           <Router />
           
           {/* Footer */}
-          <footer className="bg-foreground text-background py-12">
+          <footer className="bg-card border-t border-border py-12">
             <div className="max-w-6xl mx-auto px-4">
               <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
                 <div>
                   <div className="flex items-center space-x-3 mb-4">
                     <img 
-                      src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAgADsDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD3+iiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigD//2Q==" 
+                      src="@assets/5017421975789875507_1756640482111.jpg" 
                       alt="LouDao" 
-                      className="h-6 w-auto" 
+                      className="h-8 w-auto" 
                     />
-                    <span className="text-xl font-bold">LouDao</span>
                   </div>
-                  <p className="text-background/80 text-sm">
+                  <p className="text-muted-foreground text-sm">
                     Hybrid platform for reporting gender-based violence with transparency and intelligent privacy.
                   </p>
                 </div>
                 <div>
-                  <h4 className="font-semibold mb-4">Links</h4>
-                  <ul className="space-y-2 text-sm text-background/80">
-                    <li><a href="/tendedero" className="hover:text-background transition-colors">Clothesline</a></li>
-                    <li><a href="/reportar" className="hover:text-background transition-colors">Make Report</a></li>
-                    <li><a href="/analytics" className="hover:text-background transition-colors">Analytics</a></li>
-                    <li><a href="/apoyo" className="hover:text-background transition-colors">Support</a></li>
+                  <h4 className="font-semibold mb-4 text-foreground">Links</h4>
+                  <ul className="space-y-2 text-sm text-muted-foreground">
+                    <li><a href="/tendedero" className="hover:text-foreground transition-colors">Clothesline</a></li>
+                    <li><a href="/reportar" className="hover:text-foreground transition-colors">Make Report</a></li>
+                    <li><a href="/analytics" className="hover:text-foreground transition-colors">Analytics</a></li>
+                    <li><a href="/apoyo" className="hover:text-foreground transition-colors">Support</a></li>
                   </ul>
                 </div>
                 <div>
-                  <h4 className="font-semibold mb-4">Technology</h4>
-                  <ul className="space-y-2 text-sm text-background/80">
+                  <h4 className="font-semibold mb-4 text-foreground">Technology</h4>
+                  <ul className="space-y-2 text-sm text-muted-foreground">
                     <li>Zama FHEVM</li>
                     <li>Blockchain Security</li>
                     <li>Homomorphic Encryption</li>
@@ -68,7 +67,7 @@ function App() {
                   </ul>
                 </div>
                 <div>
-                  <h4 className="font-semibold mb-4">Emergency</h4>
+                  <h4 className="font-semibold mb-4 text-foreground">Emergency</h4>
                   <div className="space-y-2 text-sm">
                     <div className="bg-destructive text-destructive-foreground px-3 py-2 rounded">
                       <strong>911</strong> - National Emergency
@@ -79,7 +78,7 @@ function App() {
                   </div>
                 </div>
               </div>
-              <div className="border-t border-background/20 mt-8 pt-8 text-center text-sm text-background/60">
+              <div className="border-t border-border mt-8 pt-8 text-center text-sm text-muted-foreground">
                 <p>&copy; 2024 LouDao. Built with blockchain technology for social justice.</p>
               </div>
             </div>
