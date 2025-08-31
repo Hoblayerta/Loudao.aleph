@@ -47,7 +47,7 @@ export default function Home() {
       </section>
 
       {/* Statistics Bar */}
-      <section className="bg-white/50 py-8 border-y border-border" id="statistics">
+      <section className="bg-card/50 py-8 border-y border-border" id="statistics">
         <div className="max-w-6xl mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
             <div data-testid="stat-total-reports">
@@ -141,7 +141,7 @@ export default function Home() {
       </section>
 
       {/* Technology Section */}
-      <section className="py-16 px-4 bg-white/30">
+      <section className="py-16 px-4 bg-card/30">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl font-bold text-foreground mb-4">Cutting-Edge Technology</h2>
           <p className="text-muted-foreground mb-8">
@@ -149,19 +149,19 @@ export default function Home() {
           </p>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div className="bg-white/80 rounded-xl p-6">
+            <div className="bg-card/90 rounded-xl p-6 border border-border">
               <h3 className="font-semibold text-lg mb-2">Zama FHEVM</h3>
               <p className="text-sm text-muted-foreground">
                 Fully Homomorphic Encryption for private data analysis
               </p>
             </div>
-            <div className="bg-white/80 rounded-xl p-6">
+            <div className="bg-card/90 rounded-xl p-6 border border-border">
               <h3 className="font-semibold text-lg mb-2">Blockchain Security</h3>
               <p className="text-sm text-muted-foreground">
                 Scalable and efficient blockchain for immutable record keeping
               </p>
             </div>
-            <div className="bg-white/80 rounded-xl p-6">
+            <div className="bg-card/90 rounded-xl p-6 border border-border">
               <h3 className="font-semibold text-lg mb-2">Automatic Detection</h3>
               <p className="text-sm text-muted-foreground">
                 Pattern matching algorithms to identify repeat offenders

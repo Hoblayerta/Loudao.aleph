@@ -5,23 +5,23 @@
 :root {
   --background: hsl(278, 20%, 15%);
   --foreground: hsl(320, 15%, 95%);
-  --card: hsl(0, 0%, 100%);
-  --card-foreground: hsl(320, 10%, 15%);
-  --popover: hsl(0, 0%, 100%);
-  --popover-foreground: hsl(320, 10%, 15%);
-  --primary: hsl(278, 96%, 34%);
+  --card: hsl(278, 25%, 20%);
+  --card-foreground: hsl(320, 15%, 95%);
+  --popover: hsl(278, 25%, 20%);
+  --popover-foreground: hsl(320, 15%, 95%);
+  --primary: hsl(278, 96%, 50%);
   --primary-foreground: hsl(0, 0%, 100%);
-  --secondary: hsl(310, 95%, 38%);
+  --secondary: hsl(310, 95%, 50%);
   --secondary-foreground: hsl(0, 0%, 100%);
-  --muted: hsl(320, 15%, 94%);
-  --muted-foreground: hsl(320, 10%, 45%);
-  --accent: hsl(130, 95%, 32%);
+  --muted: hsl(278, 20%, 25%);
+  --muted-foreground: hsl(320, 15%, 70%);
+  --accent: hsl(130, 95%, 45%);
   --accent-foreground: hsl(0, 0%, 100%);
   --destructive: hsl(0, 84%, 60%);
   --destructive-foreground: hsl(0, 0%, 100%);
-  --border: hsl(320, 20%, 88%);
-  --input: hsl(320, 20%, 92%);
-  --ring: hsl(278, 96%, 34%);
+  --border: hsl(278, 20%, 30%);
+  --input: hsl(278, 20%, 25%);
+  --ring: hsl(278, 96%, 50%);
   --chart-1: hsl(278, 96%, 34%);
   --chart-2: hsl(130, 95%, 32%);
   --chart-3: hsl(310, 95%, 38%);
@@ -156,9 +156,9 @@
 
 .gradient-bg {
   background: linear-gradient(135deg, 
-    hsl(320, 15%, 97%) 0%, 
-    hsl(310, 20%, 95%) 50%, 
-    hsl(320, 15%, 97%) 100%);
+    hsl(278, 20%, 15%) 0%, 
+    hsl(278, 25%, 18%) 50%, 
+    hsl(278, 20%, 15%) 100%);
 }
 
 .pattern-alert {
@@ -172,7 +172,8 @@
 
 .floating-form {
   backdrop-filter: blur(10px);
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(72, 25, 99, 0.95);
+  color: hsl(320, 15%, 95%);
 }
 
 /* Additional utility classes for the tendedero theme */
