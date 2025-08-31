@@ -1,0 +1,461 @@
+# 🟣 LouDao MVP — Implementación Híbrida Real (Claude Code)
+
+**Objetivo:** Plataforma de denuncias de violencia de género con **tendedero público** + **análisis privado inteligente** usando **Zama FHE en Lisk Sepolia**.
+
+**Modelo:** Datos públicos visibles (agresor, institución) + Datos privados cifrados (edad, relación, urgencia) para análisis sin revelar información sensible.
+
+---
+
+## 1️⃣ Arquitectura Híbrida
+
+**Frontend (React + fhevmjs)**
+- Formulario: datos públicos + datos privados cifrados paleta de colores: 6b02a7 morado, Bf0398 rosa,  & 02a412 verde
+- Logo de la app : /home/scarf/hackatones/LouDao-MVP/client/public/logo.jpg
+- Tendedero público: TODAS las denuncias visibles
+- Analytics privados: estadísticas sin revelar datos individuales  
+- Pattern matching: "Este agresor tiene X denuncias más"
+- Directorio de apoyo con recomendaciones inteligentes
+- Conexión a Lisk Sepolia RPC
+
+**Smart Contracts (Hardhat + Zama FHEVM)**
+- `LouDaoHybrid.sol`: datos públicos + análisis FHE privado
+- Funciones FHE: estadísticas demográficas, pattern matching, validación comunitaria
+- IDs únicos seguros sin servicios externos
+
+**Blockchain**
+- Lisk Sepolia: Base EVM-compatible
+- Zama FHEVM: Coprocessor para análisis privado
+- Modelo híbrido: transparencia + privacidad inteligente
+
+---
+
+## 2️⃣ Estructura de carpetas
+
+```
+/LouDao-Hybrid-MVP
+│
+├─ contracts/
+│    ├─ LouDaoHybrid.sol
+│    └─ SupportDirectory.sol
+│
+├─ scripts/
+│    ├─ deployHybrid.js
+│    └─ deploySupport.js
+│
+├─ test/
+│    ├─ LouDaoHybrid.test.js
+│    └─ integration.test.js
+│
+├─ frontend/
+│    ├─ src/
+│    │   ├─ components/
+│    │   │   ├─ ReportForm.js
+│    │   │   ├─ PublicTendedero.js
+│    │   │   ├─ PrivateAnalytics.js
+│    │   │   └─ SupportDirectory.js
+│    │   ├─ utils/
+│    │   │   └─ fheUtils.js
+│    │   └─ App.js
+│    ├─ package.json
+│    └─ vite.config.js
+│
+├─ hardhat.config.js
+├─ package.json
+└─ .env
+```
+
+---
+
+## 3️⃣ Prompts para Claude Code
+
+### 🔹 Prompt 1 — Setup Lisk + Zama
+```text
+Crea proyecto usando Scaffold-Lisk + Zama FHEVM:
+
+1. Setup inicial:
+   npx create-scaffold-lisk@latest loudao-hybrid
+
+2. Instalar dependencias Zama:
+   npm install fhevm fhevmjs
+
+3. Configurar .env:
+   DEPLOYER_PRIVATE_KEY=your_key
+   LISK_SEPOLIA_RPC=https://sepolia-rpc.lisk.com
+   NEXT_PUBLIC_CHAIN_ID=4202
+
+4. Configurar hardhat.config.js para Lisk Sepolia:
+   networks: {
+     liskSepolia: {
+       url: process.env.LISK_SEPOLIA_RPC,
+       chainId: 4202,
+       accounts: [process.env.DEPLOYER_PRIVATE_KEY]
+     }
+   }
+
+5. Package.json dependencies:
+   - fhevm: "^0.4.0"
+   - fhevmjs: "^0.4.0" 
+   - @nomicfoundation/hardhat-toolbox: "^4.0.0"
+   - ethers: "^6.8.0"
+```
+
+### 🔹 Prompt 2 — Smart Contract Híbrido con Zama FHE
+
+```text
+Crear contracts/LouDaoHybrid.sol:
+
+Importaciones:
+import "fhevm/lib/TFHE.sol";
+
+Structs:
+1. PublicReport (visible en tendedero):
+   - string agresor
+   - string institucion  
+   - string descripcionGeneral
+   - uint256 year
+   - uint256 timestamp
+   - uint256 reportId
+
+2. PrivateData (cifrado con FHE):
+   - euint32 victimAge (edad para estadísticas)
+   - euint8 relationshipType (0-5: desconocido, pareja, jefe, etc)
+   - euint8 violenceType (tipo específico de violencia)
+   - euint8 urgencyLevel (nivel de peligro 1-5)
+   - bytes32 reporterHash (anonimato)
+
+Funciones principales:
+1. submitReport() - datos públicos + cifrados
+2. getAllPublicReports() - para tendedero  
+3. getAgresorReportCount() - pattern matching
+4. getPrivateStatistics() - estadísticas FHE
+5. findRelevantSupport() - recomendaciones
+
+Variables FHE para estadísticas:
+- euint32 totalAge (suma cifrada)
+- euint32 ageCount (contador cifrado)
+
+Mapping para pattern matching:
+- mapping(string => uint256[]) reportsByAgresor
+
+Eventos:
+- ReportSubmitted (datos públicos)
+- PatternMatched (cuando agresor tiene múltiples denuncias)
+
+ID único: keccak256(reportCounter, block.timestamp, msg.sender)
+```
+
+### 🔹 Prompt 3 — SupportDirectory Simple
+
+```text
+Crear contracts/SupportDirectory.sol:
+
+Struct SupportOrganization:
+- string name
+- string city
+- string contact  
+- string orgType ("ong", "refugio", "legal", "psicologico", "medico")
+- bool active
+
+Funciones:
+- addSupportOrg() onlyOwner
+- getSupportOrgs() public view
+- getSupportOrgsByType() public view
+
+Pre-cargar organizaciones reales de México:
+1. "CAVI CDMX" - "Ciudad de México" - "555-533-5533" - "gobierno"
+2. "Red Nacional de Refugios" - "Nacional" - "01-800-822-4460" - "refugio"
+3. "LOCATEL Emergencias" - "Ciudad de México" - "56-58-1111" - "emergencia"
+4. "Instituto Nacional de las Mujeres" - "Nacional" - "01-800-911-2511" - "gobierno"
+
+Solo owner puede gestionar organizaciones.
+```
+
+### 🔹 Prompt 4 — Deploy Scripts para Lisk
+
+```text
+Crear scripts de deploy:
+
+scripts/deployHybrid.js:
+- Deploy LouDaoHybrid.sol en Lisk Sepolia
+- Configurar permisos iniciales FHE 
+- Guardar address en deployments.json
+- Console.log address y gas usado
+- Verificar contrato en Lisk explorer
+
+scripts/deploySupport.js:  
+- Deploy SupportDirectory.sol
+- Agregar organizaciones iniciales mexicanas
+- Conectar con contrato principal si necesario
+
+Comandos:
+npx hardhat run scripts/deployHybrid.js --network liskSepolia
+npx hardhat run scripts/deploySupport.js --network liskSepolia
+
+Verificación:
+npx hardhat verify --network liskSepolia <address>
+```
+
+### 🔹 Prompt 5 — Frontend con fhevmjs Integration
+
+```text
+Crear frontend React con cifrado FHE:
+
+Componente ReportForm.js:
+- Form con campos públicos: agresor, institución, descripción, año
+- Form con campos privados: edad, relación, tipo violencia, urgencia
+- Cifrar datos privados con fhevmjs antes de enviar
+- Mostrar loading durante cifrado
+- Validación de inputs
+
+Componente PublicTendedero.js:  
+- Grid de cards mostrando TODAS las denuncias públicas
+- Cada card: agresor, institución, descripción, año, fecha
+- Filtros por año, institución
+- Search box para buscar agresores
+- Mostrar "⚠️ X denuncias más" si hay pattern matching
+
+Componente PrivateAnalytics.js:
+- Estadísticas agregadas sin revelar datos individuales
+- "Edad promedio: X años" (calculado con FHE)
+- "Tipo de violencia más común: X"
+- Charts básicos con data agregada
+
+Utils fheUtils.js:
+- Funciones para inicializar fhevmjs
+- Cifrar inputs antes de enviar a contrato
+- Manejar errores de cifrado
+
+Integración con Lisk:
+- Provider para Lisk Sepolia
+- Auto-switch de red si no está en Lisk
+- Conexión MetaMask
+- Handle de transacciones y confirmaciones
+```
+
+### 🔹 Prompt 6 — Pattern Matching y Analytics
+
+```text
+Implementar funcionalidades inteligentes:
+
+Pattern Matching Automático:
+- Detectar automáticamente múltiples denuncias del mismo agresor
+- Mostrar alerta: "Este agresor tiene X denuncias adicionales"
+- No revelar identidades de otras víctimas
+- Visual indicator en el tendedero
+
+Estadísticas Privadas con FHE:
+- Calcular promedios de edad sin revelar edades específicas
+- Análisis de tipos de violencia más comunes
+- Estadísticas por institución sin identificar víctimas
+- Usar TFHE.add(), TFHE.div() para cálculos cifrados
+
+Recomendaciones Inteligentes:
+- Basado en tipo de violencia cifrado → recomendar servicios específicos
+- Basado en urgencia cifrada → priorizar contactos de emergencia
+- Basado en ubicación → mostrar organizaciones locales primero
+
+Validación Comunitaria:
+- Permitir votos anónimos sobre credibilidad usando FHE
+- Sistema de scoring sin revelar quién vota qué
+- Threshold para marcar reportes como "verificados por comunidad"
+```
+
+### 🔹 Prompt 7 — UI/UX del Tendedero
+
+```text
+Diseñar interfaz estilo "tendedero de ropa":
+
+Layout Principal:
+- Header con stats agregadas: "X denuncias totales, Y agresores únicos"  
+- Filtros: año, tipo de institución, búsqueda por nombre
+- Grid responsive de "cards colgadas" como ropa en tendedero
+
+Card Design para cada denuncia:
+- Visual como "papel colgado con pinza"
+- Agresor (destacado)
+- Institución
+- Descripción (truncada con "ver más")
+- Año y fecha
+- Badge "⚠️ X más denuncias" si pattern matching detecta repetición
+
+Colores y tema:
+- Púrpura/violeta como color primario (tema feminista)
+- Cards en tonos pasteles pero legibles
+- Hover effects sutiles
+- Diseño empático pero no victimizante
+
+Interactividad:
+- Click en card abre modal con detalles completos
+- Botón "Conectar con apoyo" → muestra organizaciones relevantes
+- Share button para compartir denuncia específica
+- Animaciones sutiles al cargar nuevas denuncias
+```
+
+### 🔹 Prompt 8 — Tests y Validación
+
+```text
+Crear tests para validar funcionalidad:
+
+test/LouDaoHybrid.test.js:
+- Test submitReport con datos públicos + cifrados
+- Verificar getAllPublicReports devuelve datos correctos
+- Test pattern matching (múltiples reportes mismo agresor)
+- Test estadísticas FHE (totalAge, ageCount)
+- Mock fhevm para tests locales rápidos
+
+test/integration.test.js:
+- Test flujo completo: envío → pattern detection → analytics
+- Test recomendaciones de apoyo
+- Test validación comunitaria
+
+Frontend testing:
+- Test cifrado con fhevmjs
+- Test conexión a Lisk Sepolia
+- Test UI components rendering
+- Test filtros y búsqueda
+
+Setup para testing:
+- Usar hardhat network local con fhevm mock
+- Datos de prueba realistas pero ficticios
+- Evitar loops pesados en tests para Replit
+```
+
+### 🔹 Prompt 9 — Demo Completo y Deploy
+
+```text
+Preparar demo funcional para hackathon:
+
+Flow de demo:
+1. Abrir app → mostrar tendedero con denuncias pre-existentes
+2. Mostrar analytics privadas: "Datos de X denuncias procesados"
+3. Conectar wallet a Lisk Sepolia
+4. Llenar formulario completo (datos públicos + privados)
+5. Mostrar proceso de cifrado FHE en tiempo real
+6. Submit → confirmar en blockchain
+7. Ver nueva denuncia aparecer en tendedero
+8. Demostrar pattern matching si agresor repetido
+9. Mostrar recomendaciones de apoyo inteligentes
+10. Explicar privacidad: datos públicos vs análisis privado
+
+Deploy production:
+1. Deploy contratos a Lisk Sepolia
+2. Verificar en Lisk explorer  
+3. Deploy frontend a Vercel/Netlify
+4. Configurar ENVs de producción
+5. Pre-cargar datos de organizaciones mexicanas reales
+6. Wallet con Lisk Sepolia ETH para gas
+
+Datos demo:
+- 3-5 denuncias pre-cargadas para mostrar tendedero
+- 1-2 con mismo agresor para pattern matching
+- Organizaciones reales de apoyo en México
+- No usar datos reales de víctimas
+
+Presentación:
+- Explicar modelo híbrido: transparencia + privacidad inteligente  
+- Demostrar valor de FHE para análisis sin exposición
+- Mostrar impacto social inmediato
+- Roadmap: moderación, verificación, expansión
+```
+
+---
+
+## 4️⃣ Configuración Técnica
+
+### Hardhat Config Completo
+```javascript
+require("@nomicfoundation/hardhat-toolbox");
+require('dotenv').config();
+
+module.exports = {
+  solidity: {
+    version: "0.8.24",
+    settings: {
+      optimizer: {
+        enabled: true,
+        runs: 200
+      }
+    }
+  },
+  networks: {
+    liskSepolia: {
+      url: process.env.LISK_SEPOLIA_RPC || "https://sepolia-rpc.lisk.com",
+      chainId: 4202,
+      accounts: process.env.DEPLOYER_PRIVATE_KEY ? [process.env.DEPLOYER_PRIVATE_KEY] : []
+    }
+  },
+  etherscan: {
+    apiKey: {
+      liskSepolia: "abc"
+    },
+    customChains: [
+      {
+        network: "liskSepolia",
+        chainId: 4202,
+        urls: {
+          apiURL: "https://sepolia-blockscout.lisk.com/api",
+          browserURL: "https://sepolia-blockscout.lisk.com/"
+        }
+      }
+    ]
+  }
+};
+```
+
+### Package.json Dependencies
+```json
+{
+  "dependencies": {
+    "fhevm": "^0.4.0",
+    "fhevmjs": "^0.4.0", 
+    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "ethers": "^6.8.0",
+    "hardhat": "^2.19.0",
+    "react": "^18.2.0",
+    "vite": "^4.4.5"
+  }
+}
+```
+
+---
+
+## 5️⃣ Modelo de Datos Final
+
+### Datos Públicos (Tendedero):
+- ✅ Nombre del agresor
+- ✅ Institución donde ocurrió
+- ✅ Descripción general del incidente  
+- ✅ Año del incidente
+- ✅ Fecha del reporte
+
+### Datos Privados Cifrados (Analytics):
+- 🔒 Edad de la víctima (para estadísticas demográficas)
+- 🔒 Relación con agresor (para análisis de patrones)
+- 🔒 Tipo específico de violencia (para recomendaciones)  
+- 🔒 Nivel de urgencia (para priorizar apoyo)
+- 🔒 Hash del reportante (anonimato absoluto)
+
+### Análisis Inteligente Generado:
+- 📊 Estadísticas demográficas agregadas
+- 🔍 Pattern matching por agresor
+- 🎯 Recomendaciones personalizadas de apoyo
+- ✅ Validación comunitaria anónima
+
+---
+
+## 6️⃣ Valor Técnico Real de Zama FHE
+
+**Sin FHE (problema):** 
+- Datos sensibles expuestos o no recolectados
+- Análisis limitado por privacidad
+- Sin insights demográficos útiles
+
+**Con FHE (solución):**
+- ✅ Recolección de datos sensibles de forma segura
+- ✅ Análisis estadístico sin comprometer privacidad individual  
+- ✅ Pattern matching inteligente manteniendo anonimato
+- ✅ Recomendaciones personalizadas sin exposición de datos
+
+---
+
+✅ **Plan híbrido completo**: Impacto social inmediato (tendedero público) + análisis inteligente privado (Zama FHE) en Lisk Sepolia, deployable y funcional para hackathon.
