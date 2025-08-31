@@ -15,9 +15,9 @@ export default function Apoyo() {
       <div className="min-h-screen py-16 px-4">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
-            <h1 className="text-3xl font-bold text-foreground mb-4">Directorio de Apoyo</h1>
+            <h1 className="text-3xl font-bold text-foreground mb-4">Support Directory</h1>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              Organizaciones verificadas en México que brindan apoyo integral a víctimas de violencia de género.
+              Verified organizations in Mexico that provide comprehensive support to victims of gender-based violence.
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -49,7 +49,7 @@ export default function Apoyo() {
           <CardHeader>
             <CardTitle className="flex items-center text-destructive">
               <Phone className="h-5 w-5 mr-3" />
-              En Caso de Emergencia
+              In Case of Emergency
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -62,7 +62,7 @@ export default function Apoyo() {
                 data-testid="button-emergency-911"
               >
                 <Phone className="h-4 w-4 mr-2" />
-                911 - Emergencia Nacional
+                911 - National Emergency
               </Button>
               <Button 
                 variant="outline" 

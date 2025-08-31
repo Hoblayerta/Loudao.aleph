@@ -15,29 +15,19 @@ const config: HardhatUserConfig = {
     },
   },
   networks: {
-    liskSepolia: {
-      url: "https://rpc.sepolia-api.lisk.com",
-      chainId: 4202,
+    sepolia: {
+      url: "https://rpc.sepolia.org",
+      chainId: 11155111,
       accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
     },
   },
   fhevm: {
-    network: "liskSepolia",
+    network: "sepolia",
   },
   etherscan: {
     apiKey: {
-      liskSepolia: process.env.ETHERSCAN_API_KEY || "",
+      sepolia: process.env.ETHERSCAN_API_KEY || "",
     },
-    customChains: [
-      {
-        network: "liskSepolia",
-        chainId: 4202,
-        urls: {
-          apiURL: "https://sepolia-blockscout.lisk.com/api",
-          browserURL: "https://sepolia-blockscout.lisk.com",
-        },
-      },
-    ],
   },
 };
 

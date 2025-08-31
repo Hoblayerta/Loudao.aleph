@@ -62,6 +62,8 @@ export default function Reportar() {
       setIsEncrypting(true);
 
       try {
+        console.log("Starting report submission with data:", data);
+        
         // Encrypt private data
         const encryptedData = await fheService.encryptPrivateData({
           victimAge: data.victimAge,
@@ -69,13 +71,19 @@ export default function Reportar() {
           violenceType: data.violenceType,
           urgencyLevel: data.urgencyLevel,
         });
+        console.log("Encrypted data successfully");
 
         // Submit to blockchain if connected
         console.log("Is wallet connected?", isConnected);
         console.log("Contract address:", import.meta.env.VITE_CONTRACT_ADDRESS);
         
         if (isConnected) {
-          console.log("Submitting to blockchain...");
+          console.log("Submitting to blockchain with parameters:");
+          console.log("- Aggressor:", data.aggressorName);
+          console.log("- Institution:", data.institution); 
+          console.log("- Year:", data.incidentYear);
+          console.log("- Description length:", data.description.length);
+          
           const txHash = await blockchainService.submitReport(
             data.aggressorName,
             data.institution,
@@ -84,7 +92,7 @@ export default function Reportar() {
             data.city || "",
             encryptedData
           );
-          console.log("Transaction hash:", txHash);
+          console.log("Transaction successful! Hash:", txHash);
 
           // Submit to backend with blockchain transaction hash
           return await apiRequest("POST", "/api/reports", {

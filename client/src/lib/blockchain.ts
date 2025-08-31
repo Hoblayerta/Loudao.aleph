@@ -312,16 +312,22 @@ export class BlockchainService {
     
     // Check if we're on Sepolia (Chain ID: 11155111)
     const network = await this.provider.getNetwork();
+    console.log("Current network:", network.chainId, network.name);
+    
     if (Number(network.chainId) !== 11155111) {
+      console.log("Switching to Sepolia testnet...");
       // Switch to Sepolia
       try {
         await window.ethereum.request({
           method: 'wallet_switchEthereumChain',
           params: [{ chainId: '0xAA36A7' }], // 11155111 in hex
         });
+        console.log("Successfully switched to Sepolia");
       } catch (switchError: any) {
+        console.log("Switch error:", switchError);
         // If network doesn't exist, add it
         if (switchError.code === 4902) {
+          console.log("Adding Sepolia network...");
           await window.ethereum.request({
             method: 'wallet_addEthereumChain',
             params: [{
@@ -336,10 +342,13 @@ export class BlockchainService {
               blockExplorerUrls: ['https://sepolia.etherscan.io']
             }]
           });
+          console.log("Successfully added Sepolia network");
         } else {
           throw switchError;
         }
       }
+    } else {
+      console.log("Already on Sepolia network");
     }
 
     this.signer = await this.provider.getSigner();

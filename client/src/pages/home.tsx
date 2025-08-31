@@ -143,37 +143,37 @@ export default function Home() {
       {/* Technology Section */}
       <section className="py-16 px-4 bg-white/30">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl font-bold text-foreground mb-4">Tecnología de Vanguardia</h2>
+          <h2 className="text-3xl font-bold text-foreground mb-4">Cutting-Edge Technology</h2>
           <p className="text-muted-foreground mb-8">
-            Utilizamos las tecnologías más avanzadas para garantizar privacidad y transparencia.
+            We use the most advanced technologies to ensure privacy and transparency.
           </p>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             <div className="bg-white/80 rounded-xl p-6">
               <h3 className="font-semibold text-lg mb-2">Zama FHEVM</h3>
               <p className="text-sm text-muted-foreground">
-                Cifrado homomórfico completamente funcional para análisis privados
+                Fully Homomorphic Encryption for private data analysis
               </p>
             </div>
             <div className="bg-white/80 rounded-xl p-6">
-              <h3 className="font-semibold text-lg mb-2">Lisk Sepolia</h3>
+              <h3 className="font-semibold text-lg mb-2">Blockchain Security</h3>
               <p className="text-sm text-muted-foreground">
-                Red blockchain escalable y eficiente para registro inmutable
+                Scalable and efficient blockchain for immutable record keeping
               </p>
             </div>
             <div className="bg-white/80 rounded-xl p-6">
-              <h3 className="font-semibold text-lg mb-2">Detección Automática</h3>
+              <h3 className="font-semibold text-lg mb-2">Automatic Detection</h3>
               <p className="text-sm text-muted-foreground">
-                Algoritmos de patrón matching para identificar agresores recurrentes
+                Pattern matching algorithms to identify repeat offenders
               </p>
             </div>
           </div>
 
           <div className="bg-gradient-to-r from-primary/10 to-secondary/10 rounded-xl p-6">
-            <h3 className="font-semibold text-lg mb-2">Híbrido por Diseño</h3>
+            <h3 className="font-semibold text-lg mb-2">Hybrid by Design</h3>
             <p className="text-muted-foreground">
-              La información del agresor e institución es pública para alertar a la comunidad, 
-              mientras que los datos de la víctima permanecen privados y cifrados para análisis estadísticos.
+              Aggressor and institution information is public to alert the community, 
+              while victim data remains private and encrypted for statistical analysis.
             </p>
           </div>
         </div>
