@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -23,7 +23,24 @@ export default function Reportar() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [isEncrypting, setIsEncrypting] = useState(false);
-  const [isConnected, setIsConnected] = useState(blockchainService.isConnected());
+  const [isConnected, setIsConnected] = useState(false);
+
+  // Check wallet connection on mount and periodically
+  useEffect(() => {
+    const checkConnection = async () => {
+      try {
+        const connected = await blockchainService.isConnected();
+        setIsConnected(connected);
+      } catch (error) {
+        console.error("Error checking connection:", error);
+        setIsConnected(false);
+      }
+    };
+    
+    checkConnection();
+    const interval = setInterval(checkConnection, 2000);
+    return () => clearInterval(interval);
+  }, []);
 
   const form = useForm<InsertReport>({
     resolver: zodResolver(insertReportSchema),
@@ -54,7 +71,11 @@ export default function Reportar() {
         });
 
         // Submit to blockchain if connected
+        console.log("Is wallet connected?", isConnected);
+        console.log("Contract address:", import.meta.env.VITE_CONTRACT_ADDRESS);
+        
         if (isConnected) {
+          console.log("Submitting to blockchain...");
           const txHash = await blockchainService.submitReport(
             data.aggressorName,
             data.institution,
@@ -63,6 +84,7 @@ export default function Reportar() {
             data.city || "",
             encryptedData
           );
+          console.log("Transaction hash:", txHash);
 
           // Submit to backend with blockchain transaction hash
           return await apiRequest("POST", "/api/reports", {
@@ -79,8 +101,8 @@ export default function Reportar() {
     },
     onSuccess: () => {
       toast({
-        title: "Denuncia enviada exitosamente",
-        description: "Se ha registrado en la blockchain y aparecerá en el tendedero.",
+        title: "Report submitted successfully",
+        description: "It has been recorded on the blockchain and will appear on the clothesline.",
       });
       
       queryClient.invalidateQueries({ queryKey: ["/api/reports"] });
@@ -91,8 +113,8 @@ export default function Reportar() {
     },
     onError: (error: any) => {
       toast({
-        title: "Error al enviar denuncia",
-        description: error.message || "Inténtalo de nuevo",
+        title: "Error submitting report",
+        description: error.message || "Please try again",
         variant: "destructive",
       });
     },
@@ -106,7 +128,12 @@ export default function Reportar() {
     return (
       <div className="min-h-screen py-16 px-4">
         <div className="max-w-md mx-auto">
-          <WalletConnect onConnected={() => setIsConnected(true)} />
+          <WalletConnect onConnected={async () => {
+            console.log("Wallet connected, checking status...");
+            const connected = await blockchainService.isConnected();
+            console.log("Connection status after connect:", connected);
+            setIsConnected(connected);
+          }} />
         </div>
       </div>
     );
@@ -116,9 +143,9 @@ export default function Reportar() {
     <div className="min-h-screen py-16 px-4">
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-12">
-          <h1 className="text-3xl font-bold text-foreground mb-4">Hacer una Denuncia</h1>
+          <h1 className="text-3xl font-bold text-foreground mb-4">Make a Report</h1>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Tu información personal permanece privada y cifrada. Solo los datos del agresor e institución serán públicos.
+            Your personal information remains private and encrypted. Only the aggressor and institution data will be public.
           </p>
         </div>
 
@@ -130,7 +157,7 @@ export default function Reportar() {
                 <CardHeader>
                   <CardTitle className="flex items-center">
                     <Eye className="h-5 w-5 text-primary mr-3" />
-                    Información Pública (Visible en el Tendedero)
+                    Public Information (Visible on Clothesline)
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
@@ -140,10 +167,10 @@ export default function Reportar() {
                       name="aggressorName"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Nombre del Agresor *</FormLabel>
+                          <FormLabel>Aggressor Name *</FormLabel>
                           <FormControl>
                             <Input 
-                              placeholder="Nombre completo del agresor" 
+                              placeholder="Full name of the aggressor" 
                               {...field} 
                               data-testid="input-aggressor-name"
                             />
@@ -158,10 +185,10 @@ export default function Reportar() {
                       name="institution"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Institución *</FormLabel>
+                          <FormLabel>Institution *</FormLabel>
                           <FormControl>
                             <Input 
-                              placeholder="Empresa, universidad, organización" 
+                              placeholder="Company, university, organization" 
                               {...field} 
                               data-testid="input-institution"
                             />
@@ -176,11 +203,11 @@ export default function Reportar() {
                       name="incidentYear"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Año del Incidente *</FormLabel>
+                          <FormLabel>Incident Year *</FormLabel>
                           <Select onValueChange={(value) => field.onChange(parseInt(value))} value={field.value?.toString()}>
                             <FormControl>
                               <SelectTrigger data-testid="select-incident-year">
-                                <SelectValue placeholder="Seleccionar año" />
+                                <SelectValue placeholder="Select year" />
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
@@ -201,10 +228,10 @@ export default function Reportar() {
                       name="city"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Ciudad</FormLabel>
+                          <FormLabel>City</FormLabel>
                           <FormControl>
                             <Input 
-                              placeholder="Ciudad donde ocurrió" 
+                              placeholder="City where it occurred" 
                               {...field} 
                               data-testid="input-city"
                             />
@@ -220,10 +247,10 @@ export default function Reportar() {
                     name="description"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Descripción General *</FormLabel>
+                        <FormLabel>General Description *</FormLabel>
                         <FormControl>
                           <Textarea 
-                            placeholder="Describe brevemente el incidente (sin detalles que puedan identificarte)"
+                            placeholder="Briefly describe the incident (without details that could identify you)"
                             rows={4}
                             {...field} 
                             data-testid="textarea-description"
@@ -241,10 +268,10 @@ export default function Reportar() {
                 <CardHeader>
                   <CardTitle className="flex items-center">
                     <Lock className="h-5 w-5 text-accent mr-3" />
-                    Información Privada (Cifrada con FHE)
+                    Private Information (Encrypted with FHE)
                   </CardTitle>
                   <p className="text-sm text-muted-foreground">
-                    Esta información se cifra antes de enviarse y solo se usa para análisis estadísticos anónimos.
+                    This information is encrypted before sending and is only used for anonymous statistical analysis.
                   </p>
                 </CardHeader>
                 <CardContent className="space-y-6">
@@ -254,19 +281,19 @@ export default function Reportar() {
                       name="victimAge"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Tu Edad</FormLabel>
+                          <FormLabel>Your Age</FormLabel>
                           <Select onValueChange={field.onChange} value={field.value}>
                             <FormControl>
                               <SelectTrigger data-testid="select-victim-age">
-                                <SelectValue placeholder="Seleccionar rango" />
+                                <SelectValue placeholder="Select range" />
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              <SelectItem value="1">18-25 años</SelectItem>
-                              <SelectItem value="2">26-35 años</SelectItem>
-                              <SelectItem value="3">36-45 años</SelectItem>
-                              <SelectItem value="4">46-55 años</SelectItem>
-                              <SelectItem value="5">56+ años</SelectItem>
+                              <SelectItem value="1">18-25 years</SelectItem>
+                              <SelectItem value="2">26-35 years</SelectItem>
+                              <SelectItem value="3">36-45 years</SelectItem>
+                              <SelectItem value="4">46-55 years</SelectItem>
+                              <SelectItem value="5">56+ years</SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage />
@@ -279,20 +306,20 @@ export default function Reportar() {
                       name="relationshipType"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Relación con el Agresor</FormLabel>
+                          <FormLabel>Relationship with Aggressor</FormLabel>
                           <Select onValueChange={field.onChange} value={field.value}>
                             <FormControl>
                               <SelectTrigger data-testid="select-relationship-type">
-                                <SelectValue placeholder="Seleccionar relación" />
+                                <SelectValue placeholder="Select relationship" />
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              <SelectItem value="1">Desconocido</SelectItem>
-                              <SelectItem value="2">Jefe/Superior</SelectItem>
-                              <SelectItem value="3">Compañero de trabajo</SelectItem>
-                              <SelectItem value="4">Profesor/Autoridad académica</SelectItem>
-                              <SelectItem value="5">Pareja/Ex-pareja</SelectItem>
-                              <SelectItem value="6">Conocido</SelectItem>
+                              <SelectItem value="1">Unknown</SelectItem>
+                              <SelectItem value="2">Boss/Superior</SelectItem>
+                              <SelectItem value="3">Coworker</SelectItem>
+                              <SelectItem value="4">Professor/Academic Authority</SelectItem>
+                              <SelectItem value="5">Partner/Ex-partner</SelectItem>
+                              <SelectItem value="6">Acquaintance</SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage />
@@ -305,19 +332,19 @@ export default function Reportar() {
                       name="violenceType"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Tipo de Violencia</FormLabel>
+                          <FormLabel>Type of Violence</FormLabel>
                           <Select onValueChange={field.onChange} value={field.value}>
                             <FormControl>
                               <SelectTrigger data-testid="select-violence-type">
-                                <SelectValue placeholder="Seleccionar tipo" />
+                                <SelectValue placeholder="Select type" />
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              <SelectItem value="1">Acoso verbal</SelectItem>
-                              <SelectItem value="2">Acoso físico</SelectItem>
-                              <SelectItem value="3">Discriminación</SelectItem>
-                              <SelectItem value="4">Abuso de poder</SelectItem>
-                              <SelectItem value="5">Violencia psicológica</SelectItem>
+                              <SelectItem value="1">Verbal harassment</SelectItem>
+                              <SelectItem value="2">Physical harassment</SelectItem>
+                              <SelectItem value="3">Discrimination</SelectItem>
+                              <SelectItem value="4">Abuse of power</SelectItem>
+                              <SelectItem value="5">Psychological violence</SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage />
@@ -330,19 +357,19 @@ export default function Reportar() {
                       name="urgencyLevel"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Nivel de Urgencia</FormLabel>
+                          <FormLabel>Urgency Level</FormLabel>
                           <Select onValueChange={field.onChange} value={field.value}>
                             <FormControl>
                               <SelectTrigger data-testid="select-urgency-level">
-                                <SelectValue placeholder="Seleccionar urgencia" />
+                                <SelectValue placeholder="Select urgency" />
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              <SelectItem value="1">Baja - Situación controlada</SelectItem>
-                              <SelectItem value="2">Media - Requiere atención</SelectItem>
-                              <SelectItem value="3">Alta - Situación continua</SelectItem>
-                              <SelectItem value="4">Crítica - Riesgo inmediato</SelectItem>
-                              <SelectItem value="5">Emergencia - Peligro extremo</SelectItem>
+                              <SelectItem value="1">Low - Controlled situation</SelectItem>
+                              <SelectItem value="2">Medium - Requires attention</SelectItem>
+                              <SelectItem value="3">High - Ongoing situation</SelectItem>
+                              <SelectItem value="4">Critical - Immediate risk</SelectItem>
+                              <SelectItem value="5">Emergency - Extreme danger</SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage />
@@ -358,7 +385,7 @@ export default function Reportar() {
                 <Alert className="bg-accent/10 border-accent/20">
                   <Shield className="h-4 w-4" />
                   <AlertDescription className="flex items-center">
-                    <span>Cifrando datos privados con FHEVM...</span>
+                    <span>Encrypting private data with FHEVM...</span>
                     <div className="ml-auto">
                       <div className="w-6 h-6 border-2 border-accent border-t-transparent rounded-full animate-spin"></div>
                     </div>
@@ -376,10 +403,10 @@ export default function Reportar() {
                   data-testid="button-submit-report"
                 >
                   <NotebookPen className="h-5 w-5 mr-3" />
-                  {submitReportMutation.isPending ? "Enviando..." : "Enviar Denuncia a Blockchain"}
+                  {submitReportMutation.isPending ? "Submitting..." : "Submit Report to Blockchain"}
                 </Button>
                 <p className="text-sm text-muted-foreground mt-4">
-                  Al enviar, aceptas que la información pública será visible en el tendedero.
+                  By submitting, you agree that public information will be visible on the clothesline.
                 </p>
               </div>
             </form>
