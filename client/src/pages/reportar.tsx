@@ -50,10 +50,10 @@ export default function Reportar() {
       description: "",
       incidentYear: new Date().getFullYear(),
       city: "",
-      victimAge: "",
-      relationshipType: "",
-      violenceType: "",
-      urgencyLevel: "",
+      victimAge: undefined,
+      relationshipType: undefined,
+      violenceType: undefined,
+      urgencyLevel: undefined,
     },
   });
 
